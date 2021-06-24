@@ -1,0 +1,80 @@
+.completed {
+  color: lime;
+}
+
+.in-progress {
+  color: yellow;
+}
+
+#content {
+  text-align: center;
+}
+
+.dot {
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+.project-title-link {
+  text-decoration: none;
+  color: #FFCEAC;
+}
+
+#portfolio-intro {
+  color: #FFCEAC;
+  background-color: #003153;
+  height: 100%;
+  width: 100%;
+}
+
+html, body, #content {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+#name {
+  font-family: Lato;
+  font-size: 75px;
+}
+
+#intro-content {
+  padding-top: 35vh;
+}
+
+#projects {
+  background-color: #0066AD;
+  color: #FFCEAC;
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+
+#section-title {
+  font-size: 50px;
+}
+
+#info {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  background-color: #028cef;
+  color: #FFCEAC;
+}
+
+#info-list {
+  list-style-type: none;
+}
+
+.info-list-item {
+  display: inline;
+  padding-right: 2%;
+}
+
+.info {
+  color: #FFCEAC;
+  text-decoration: none;
+}
