@@ -17,6 +17,10 @@ def style(name):
 def robots():
   return send_file('robots.txt')
 
+@app.route('/banano.json')
+def banano_json():
+  return send_file('banano.json')
+
 @app.route('/subdomains.txt')
 def subdomain():
   return send_file('subdomains.txt')
