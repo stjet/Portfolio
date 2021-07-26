@@ -1,0 +1,12 @@
+body {
+  padding-top: 1%;
+  padding-left: 22%;
+  padding-right: 22%;
+}
+#gobanme-banner {
+  width: 365px;
+}
+code {
+  background-color: gray;
+  color: blue;
+}
