@@ -33,4 +33,8 @@ def favicon():
 def redirects(file):
   return send_from_directory("to",file+".html")
 
+@app.route('/api/<file>')
+def api(file):
+  return send_from_directory("api",file)
+
 app.run(host='0.0.0.0', port=8080)
