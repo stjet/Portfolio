@@ -3,18 +3,20 @@
     "Imalfect Faucet":"https://faucet.imalfect.xyz",
     "Prussia Faucet":"https://faucet.prussia.dev",
     "Herokuapp Faucet":"https://banano-faucet.herokuapp.com",
-    "Banano Reddit Faucet":"https://bananofaucet.cc"
+    "Banano Reddit Faucet":"https://bananofaucet.cc",
+    "Crypto Jungles Hourly Faucet":"https://www.cryptojungles.com"
   },
   "apps":{
-    "Howler":"https://howler.prussia.dev"
+    "Howler":"https://howler.prussia.dev",
+    "JungleTV":"https://jungletv.live"
   },
   "personal":{
     "prussia.dev":"https://prussia.dev"
   },
   "tools":{
-
+    "Yellow Spyglass Explorer":"https://www.yellowspyglass.com"
   },
   "other":{
-
+    "Banano Hub":"https://hellomokuzai.github.io/banano-hub/"
   }
 }

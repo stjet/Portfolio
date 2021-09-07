@@ -1,4 +1,8 @@
 from flask import Flask, render_template, abort, request, url_for, send_file, send_from_directory
+import logging
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 app = Flask('Portfolio', static_url_path='', static_folder="static")
 
@@ -20,6 +24,10 @@ def robots():
 @app.route('/banano.json')
 def banano_json():
   return send_file('banano.json')
+
+@app.route('/docs/gobanme.html')
+def gobanme_TEMPFIX():
+  return send_from_directory("static/docs/gobanme","index.html")
 
 @app.route('/subdomains.txt')
 def subdomain():
