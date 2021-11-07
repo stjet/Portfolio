@@ -49,7 +49,7 @@
         </div>
         <div class="project">
           <h2 class="project-name"><a class="project-title-link" href="https://faucet.prussia.dev">Banano Faucet</a></h2>
-          <span class="status completed">Completed (Changes expected in future)</span><span class="dot">•</span><span class="source-link"><a href="https://replit.com/@rediar/Banano-Faucet">Source Code</a></span><span class="dot">•</span><span class="languages">HTML+CSS+JS, Node.js (Express.js)</span>
+          <span class="status completed">Completed (Maintained)</span><span class="dot">•</span><span class="source-link"><a href="https://github.com/jetstream0/Banano-Faucet">Source Code</a></span><span class="dot">•</span><span class="languages">HTML+CSS+JS, Node.js (Express.js)</span>
           <p class="description">Free Banano for all. An easily configurable and forkable banano and nano faucet. <a href="https://Banano-Faucet.rediar.repl.co">Alt link</a> if title link is down.</p>
         </div>
         <div class="project">
@@ -91,6 +91,11 @@
           <span class="status completed">Completed</span><span class="dot">•</span><span class="source-link"><a href="https://github.com/jetstream0/Random-Map-Generation">Source Code</a></span><span class="dot">•</span><span class="languages">HTML+CSS+JS</span>
           <p class="description">Generates random tile map with terrain.</p>
         </div>
+        <div class="project">
+          <h2 class="project-name"><a class="project-title-link" href="https://minesweeper.prussia.dev">Hexagonal Minesweeper</a></h2>
+          <span class="status completed">Completed (Changes expected in future)</span><span class="dot">•</span><span class="source-link"><a href="https://github.com/jetstream0/Minesweeper-but-hexagonal">Source Code</a></span><span class="dot">•</span><span class="languages">HTML+CSS+JS</span>
+          <p class="description">The classic game of minesweeper made with a hexagonal map and no libraries.</p>
+        </div>
         <!--Add ohio is fake news-->
       </div>
       <div id="hireme">
@@ -113,6 +118,10 @@
             <p><span class="quote"><b>“</b></span>I wasn't sure whether to transfer money to a stranger for a service that I couldn't 'Cashback' at first. You've shifted my perspective on individuals on the internet. For the past year and a half, you've been a business associate, helping me with my various demands on Discord. You have provided me with <b>loyalty, trust, and prompt results</b> since the beginning. All of the goods you've created for me have functioned <b>flawlessly</b> and are reasonably priced. I couldn't ask for a better associate!</p>
             <span>Anthracite</span>
           </div>
+          <div class="testimonial" id="4" style="display:none;">
+            <p>Prussia was kind enough to release his faucet code on Github for others to fork. When I hit a brick wall in my own technical abilities, Prussia graciously stepped in to take over the task of launching the fork for me. He is <b>very professional and responsive, and completed the task way faster than I ever expected</b>. I will definitely be hiring Prussia again to make additional fun enhancements to the faucet in the near future. Users are already loving this instance of the banano faucet!</p>
+            <span>BananoBat, BanHub.com</span>
+          </div>
           <span id="left" onclick="move(-1)">&#10094;</span><span id="right" onclick="move(1)">&#10095;</span>
         </div>
       </div>
@@ -134,7 +143,7 @@
         let current_num = 1;
         function move(change) {
           let new_num = current_num+change;
-          if (new_num != 0 && new_num != 4) {
+          if (new_num != 0 && new_num != 5) {
             document.getElementById(current_num).style.display = "none";
             document.getElementById(new_num).style.display = "block";
             current_num = new_num;

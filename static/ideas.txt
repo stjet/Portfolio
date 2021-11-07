@@ -1,2 +1,0 @@
-A service that emails you an interesting wikipedia article everyday, based on your interests
-Matrix client?
