@@ -65,7 +65,7 @@
         </div>
         -->
         <div class="project">
-          <h2 class="project-name"><a class="project-title-link" href="">PilAnimate</a></h2>
+          <h2 class="project-name"><a class="project-title-link" href="https://pypi.org/project/PilAnimate/">PilAnimate</a></h2>
           <span class="status in-progress">In Progress</span><span class="dot">•</span><span class="source-link"><a href="https://pypi.org/project/PilAnimate/">Source Code</a></span><span class="dot">•</span><span class="languages">Python (PIL)</span>
           <p class="description">Python animation library. Frame by frame rendering.</p>
         </div>
@@ -147,6 +147,14 @@
             document.getElementById(current_num).style.display = "none";
             document.getElementById(new_num).style.display = "block";
             current_num = new_num;
+          } else if (new_num == 5) {
+            document.getElementById(current_num).style.display = "none";
+            document.getElementById('1').style.display = "block";
+            current_num = 1;
+          } else if (new_num == 0) {
+            document.getElementById(current_num).style.display = "none";
+            document.getElementById('4').style.display = "block";
+            current_num = 4;
           }
         }
       </script>
