@@ -97,9 +97,14 @@
           <p class="description">The classic game of minesweeper made with a hexagonal map and no libraries.</p>
         </div>
         <div class="project">
-          <h2 class="project-name"><a class="project-title-link" href="https://captcha.prussia.dev/"></a></h2>
+          <h2 class="project-name"><a class="project-title-link" href="https://captcha.prussia.dev/">Captcha</a></h2>
           <span class="status completed">Completed (Changes expected in future)</span><span class="dot">•</span><span class="source-link"><a href="https://github.com/jetstream0/Captcha">Source Code</a></span><span class="dot">•</span><span class="languages">HTML, Ruby (Sinatra, erb, chunky_png)</span>
           <p class="description">A database free text captcha that utilizes Salsa 20 symmetric encryption.</p>
+        </div>
+        <div class="project">
+          <h2 class="project-name"><a class="project-title-link" href="https://prussiafan.club/">Markdown to HTML</a></h2>
+          <span class="status completed">Completed (Changes expected in future)</span><span class="dot">•</span><span class="source-link"><a href="https://github.com/jetstream0/Markup-to-HTML">Source Code</a></span><span class="dot">•</span><span class="languages">Javascript, HTML, CSS, Markdown</span>
+          <p class="description">A site hosting tutorials written in markdown, converting them to html.</p>
         </div>
         <!--Add ohio is fake news-->
       </div>
@@ -124,8 +129,12 @@
             <span>Anthracite</span>
           </div>
           <div class="testimonial" id="4" style="display:none;">
-            <p>Prussia was kind enough to release his faucet code on Github for others to fork. When I hit a brick wall in my own technical abilities, Prussia graciously stepped in to take over the task of launching the fork for me. He is <b>very professional and responsive, and completed the task way faster than I ever expected</b>. I will definitely be hiring Prussia again to make additional fun enhancements to the faucet in the near future. Users are already loving this instance of the banano faucet!</p>
+            <p><span class="quote"><b>“</b></span>Prussia was kind enough to release his faucet code on Github for others to fork. When I hit a brick wall in my own technical abilities, Prussia graciously stepped in to take over the task of launching the fork for me. He is <b>very professional and responsive, and completed the task way faster than I ever expected</b>. I will definitely be hiring Prussia again to make additional fun enhancements to the faucet in the near future. Users are already loving this instance of the banano faucet!</p>
             <span>BananoBat, BanHub.com</span>
+          </div>
+          <div class="testimonial" id="5" style="display:none;">
+            <p><span class="quote"><b>“</b></span>Prussia is an amazing person to work with. I found some of their code(which is freely available to anyone) I was interested in and didn’t have the capabilities to set it up myself. We agreed on a quote upfront and I have a feeling it turned into a longer job than either of us expected. But through all the roadblocks Prussia was patient and put a large amount of time and effort to get the job done and done right. They also offered future support and assistance which is much appreciated. I should also mention most, if not all, roadblocks were due to my specific situation and requests. I would most definitely work with them again if a situation arose that required their skills.</p>
+            <span>MrNoSock, faucet.bananotime.com</span>
           </div>
           <span id="left" onclick="move(-1)">&#10094;</span><span id="right" onclick="move(1)">&#10095;</span>
         </div>
@@ -148,18 +157,18 @@
         let current_num = 1;
         function move(change) {
           let new_num = current_num+change;
-          if (new_num != 0 && new_num != 5) {
+          if (new_num != 0 && new_num != 6) {
             document.getElementById(current_num).style.display = "none";
             document.getElementById(new_num).style.display = "block";
             current_num = new_num;
-          } else if (new_num == 5) {
+          } else if (new_num == 6) {
             document.getElementById(current_num).style.display = "none";
             document.getElementById('1').style.display = "block";
             current_num = 1;
           } else if (new_num == 0) {
             document.getElementById(current_num).style.display = "none";
-            document.getElementById('4').style.display = "block";
-            current_num = 4;
+            document.getElementById('5').style.display = "block";
+            current_num = 5;
           }
         }
       </script>
