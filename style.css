@@ -95,3 +95,11 @@ h1 {
 .quote {
   font-size: 28px;
 }
+
+#left, #right {
+  cursor: pointer;
+}
+
+#left {
+  margin-right: 15px;
+}
