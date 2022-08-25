@@ -10,7 +10,7 @@
   </head>
   <body>
     <center><img src="gobanme-banner.png" id="gobanme-banner"></img></center>
-    <p>This is the GoBanMe documentation. GoBanMe is a browser extension that enables users to tip Banano, a feeless cryptocurrency, to website owners. Below is the table of contents.</p>
+    <p>This is the GoBanMe documentation. GoBanMe is a browser extension that enables users to tip Banano, a feeless cryptocurrency, to website owners (and youtubers). It also has a feature to enqueue videos directly to <a target="_blank" href="https://jungletv.live">JungleTV.</a> Below is the table of contents.</p>
     <h1>Table of Contents</h1>
     <ul>
       <li><a href="#user-guide">User Guide</a></li>
@@ -26,6 +26,8 @@
         <li> <a href="#access-all-data">Access your data for all websites (*://*/*)</a></li>
         <li><a href="#clipboard-write">Input data to the clipboard (clipboardWrite)</a></li>
         <li><a href="#storage">storage</a></li>
+        <li><a href="#scripting">scripting</a></li>
+        <li><a href="#system-display">system.display</a></li>
       </ul>
       <li><a href="#contrib-guide">Contributors Guide</a></li>
       <li><a href="#add-gobanme">Add GoBanMe to website</a></li>
@@ -59,10 +61,16 @@
     <p>This permissions sounds pretty scary, but don't worry, we only need this to access the website's banano.json file. The extension does not store or access any of your data or information or any data or information of any websites you accessed, and definetly does not send it anywhere outside your device. The extension is <a href="https://github.com/jetstream0/GoBanMe">open source</a> so you can check if yourself. I am working on a way to not need this permission.</p>
 
     <h2 id="clipboard-write">Input data to the clipboard (clipboardWrite)</h2>
-    <p>This permission is needed to copy the website's banano address to the clipboard. No clipboard data is stored or sent outside of the user's device.</p>
+    <p>This permission is needed to copy the website's banano address to the clipboard. No clipboard data is stored or sent outside of the user's device. Currently only for the firefox extension.</p>
 
     <h2 id="storage">storage</h2>
     <p>This permission is needed to store an encrypted version of your seed (your seed is encrypted by your password).</p>
+
+    <h2 id="scripting">scripting</h2>
+    <p>A permission required to access the chromium scripting api, that allows the youtube to jtv feature to work. Only for the chromium extension.</p>
+
+    <h2 id="system-display">system.display</h2>
+    <p>Needed to access screen width and height. Only for the chromium extension.</p>
 
     <h1 id="contrib-guide">Contributors Guide</h1>
     <p>WORK IN PROGRESS</p>

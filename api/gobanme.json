@@ -8,15 +8,17 @@
   },
   "apps":{
     "JungleTV":"https://jungletv.live",
-    "BananoPlanet": "https://bananoplanet.cc/"
+    "BananoPlanet": "https://bananoplanet.cc",
+    "Banano NFTs Client": "https://bannfts.prussiafan.club"
   },
   "personal":{
-    "prussia.dev":"https://prussia.dev"
+    "prussia.dev":"https://prussia.dev",
+    "sp642": "https://sp642.pages.dev"
   },
   "tools":{
     "Yellow Spyglass Explorer":"https://www.yellowspyglass.com"
   },
   "other":{
-    "Banano Hub":"https://hellomokuzai.github.io/banano-hub/"
+    "Banano Hub":"https://hellomokuzai.github.io/banano-hub"
   }
 }
