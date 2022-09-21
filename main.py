@@ -9,7 +9,11 @@ app = Flask('Portfolio', static_url_path='', static_folder="static")
 @app.route('/')
 def index():
   return send_file('index.html')
-  
+
+@app.route('/sample')
+def sample():
+  return send_file('sample.html')
+
 @app.route('/<name>.css')
 def style(name):
   try:

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Samples - Hire Me!">
+    <meta name="description" content="Check out previous work, and consider hiring me (for money).">
+    <title>Samples - Hire me!</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico"  />
+    <link href="hire.css?v=0.0.58" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="section start-section">
+      <div id="start-container">
+        <h1>I'll make...  <span id="will-make">Discord Bots</span></h1>
+      </div>
+    </div>
+    <div id="samples-section-container">
+      <div class="section sample-section">
+        <div class="sample-text-container">
+          <h1>Beer Goggles Game Bot</h1>
+          <p></p>
+          <p>A fun game using the new Discord bot interactions API. Made a NFT project on Algorand, and includes an internal currency system, role system, and NFT counter.</p>
+          <div class="sample-quote">
+            <p>"Prussia helped me get my entire gameified Discord idea up and running. He started from scratch helping me create discord bots that would not only give out free tokens to players, but real NFTs on the Algorand blockchain as well, along with countless other operational commands and features. His understanding of how to get things done as a developer allow me to have crazy ideas -- and they actually work! He's super easy to work with as well, and has great ideas of his own. 10/10"</p>
+            <p>- Mayor, Beer Goggles NFT</p>
+          </div>
+        </div>
+        <div class="sample-img-container">
+          <img src="/sample_images/bg_bot_demo2.png"></img>
+        </div>
+      </div>
+      <div class="section sample-section short-section">
+        <div class="sample-img-container">
+          <img src="/sample_images/barrel_demo.png"></img>
+        </div>
+        <div class="sample-text-container">
+          <h1>Barrel O' Bananos</h1>
+          <p>A Banano faucet meant for embedding in websites, made with extremely reponsive web design.</p>
+          <div class="sample-quote">
+            <p>"I reached out to Prussia after encountering his work on other crypto faucets. I brought him my vision for a personalized, embeddable faucet widget to place in my web store—having virtually no programming knowledge myself. <b>Prussia managed to realize my idea to a tee at an impressive pace</b>, handling both frontend and backend work for the site, and guiding me along when necessary. I hope to cooperate with this highly capable individual again!"</p>
+            <p>- devin/makeanything, devinmontes.com</p>
+          </div>
+        </div>
+      </div>
+      <div class="section sample-section short-section">
+        <div class="sample-text-container">
+          <h1>Arbitrum Nova Faucet</h1>
+          <p>A faucet that gives out ETH on the Arbitrum Nova rollup to help users with gas fees.</p>
+          <div class="sample-quote">
+            <p>"Prussia is a great guy, he has made the faucet I requested in less than a day and was very responsive to my requests. His prices are fantastic and he does the job very precisely and well. Highly recommended."</p>
+            <p>- u/hashzzz, novafaucet.com</p>
+          </div>
+        </div>
+        <div class="sample-img-container">
+          <img src="/sample_images/nova_faucet_demo.png"></img>
+        </div>
+      </div>
+      <div class="section sample-section">
+        <div class="sample-img-container">
+          <img src="/sample_images/bif_bot_demo.png"></img>
+        </div>
+        <div class="sample-text-container">
+          <h1>BIF Bot</h1>
+          <p>A Discord bot that uses the seedfinder API to search for strains and breeders. Also functions as a Discord server bridge.</p>
+          <div class="sample-quote">
+            <p>"I wasn't sure whether to transfer money to a stranger for a service that I couldn't 'Cashback' at first. You've shifted my perspective on individuals on the internet. For the past year and a half, you've been a business associate, helping me with my various demands on Discord. You have provided me with loyalty, trust, and prompt results since the beginning. All of the goods you've created for me have functioned flawlessly and are reasonably priced. I couldn't ask for a better associate!"</p>
+            <p>- Anthracite, Brothers in Farms</p>
+          </div>
+        </div>
+      </div>
+      <div class="section sample-section">
+        <div class="sample-text-container">
+          <h1>Reddit Banano Giveaway Bot</h1>
+          <p>6 Reddit bots making reddit giveaways possible. Handled 50,000+ comments.</p>
+          <div class="sample-quote">
+            <p>"Quote placeholder: lorem ipsum dorem bipsum checksum england scotland wales northern ireland isle of man"</p>
+            <p>- Quote pending</p>
+          </div>
+        </div>
+        <div class="sample-img-container">
+          <img src="/sample_images/reddit_ban_bot_demo.png"></img>
+        </div>
+      </div>
+      <div class="section sample-section">
+      </div>
+    </div>
+    <div id="pitch-section" class="section short-section">
+      <center>
+        <h1>Convinced?</h1>
+        <p>Let's do this thing! Contact me on <a href="/to/discord">Discord</a> and we can talk. If you don't have discord additional contact methods are listed <a href="/#info">here</a>.</p>
+      </center>
+    </div>
+    <script>
+      let willMakeIndex = 0;
+      let willMakeText = ["Discord Bots", "Crypto Faucets", "Browser Extensions", "Automation Scripts", "Websites", "Reddit Bots", "Useful Tools"];
+      
+      async function changeWillMake() {
+        //exit animation
+        let exit_anim = document.getElementById("will-make").animate([
+          {
+            transform: "translateY(0px)",
+            opacity: 1
+          },
+          {
+            transform: "translateY(70px)",
+            opacity: 0.3
+          }
+        ], 1500);
+        await exit_anim.finished;
+        willMakeIndex++;
+        if (willMakeIndex >= willMakeText.length) {
+          willMakeIndex = 0;
+        }
+        //enter animation
+        document.getElementById("will-make").innerText = willMakeText[willMakeIndex];
+        document.getElementById("will-make").animate([
+          {
+            transform: "translateY(-70px)",
+            opacity: 0.3
+          },
+          {
+            transform: "translateY(0px)",
+            opacity: 1
+          }
+        ], 1500);
+      }
+      
+      setTimeout(function() {
+        changeWillMake();
+        //function `changeWillMake` takes 3050 milliseconds... so
+        setInterval(changeWillMake, 5500);
+      }, 2000);
+      
+      function elementOnScreen(ele) {
+        let viewport_height = document.documentElement.clientHeight;
+        let scroll_distance = document.documentElement.scrollTop;
+        let ele_position = ele.offsetTop;
+        let ele_height = ele.clientHeight;
+        let min_visible = ele_position-viewport_height;
+        let max_visible = ele_position+ele_height;
+        if (scroll_distance > min_visible && scroll_distance < max_visible) {
+          return true;
+        }
+        return false;
+      }
+
+      let img_animation_applied = [];
+      
+      document.addEventListener("scroll", function(e) {
+        let img_sections = document.getElementsByClassName("sample-img-container");
+        for (let i=0; i < img_sections.length; i++) {
+          if (!elementOnScreen(img_sections[i])) {
+            continue;
+          }
+          if (img_animation_applied.includes(i)) {
+            continue;
+          }
+          console.log(i, img_sections[i])
+          img_animation_applied.push(i);
+          /*
+          //animation cannot be replayed for 10 seconds
+          setTimeout(function() {
+            img_animation_applied.splice(img_animation_applied.indexOf(i), 1);
+          }, 10000);
+          */
+          if (i%2 === 0) {
+            if (screen.width <= 600) {
+              //slight difference for mobile
+              img_sections[i].animate([
+                {
+                  margin: "0 0 0 100vw"
+                },
+                {
+                  margin: "0"
+                }
+              ], 500);
+            } else {
+              img_sections[i].animate([
+                {
+                  margin: "0 -100vw 0 0"
+                },
+                {
+                  margin: "0"
+                }
+              ], 500);
+            }
+          } else {
+            img_sections[i].animate([
+              {
+                margin: "0 0 0 -100vw"
+              },
+              {
+                margin: "0"
+              }
+            ], 500);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
