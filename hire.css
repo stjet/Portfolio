@@ -105,6 +105,10 @@ body {
   font-size: 2.75em;
 }
 
+.sample-hide {
+  display: none;
+}
+
 #pitch-section center {
   margin-top: 25vh;
 }
@@ -121,6 +125,15 @@ body {
 
 #pitch-section a {
   color: white;
+}
+
+#show-more {
+  color: white;
+  font-size: 1.2em;
+}
+
+#show-more:hover {
+  cursor: pointer;
 }
 
 /* tablets */

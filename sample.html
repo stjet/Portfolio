@@ -7,7 +7,7 @@
     <meta name="description" content="Check out previous work, and consider hiring me (for money).">
     <title>Samples - Hire me!</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"  />
-    <link href="hire.css?v=0.0.62" rel="stylesheet" type="text/css" />
+    <link href="hire.css?v=0.0.65" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="section start-section">
@@ -82,7 +82,19 @@
           <img src="/sample_images/reddit_ban_bot_demo.png"></img>
         </div>
       </div>
-      <div class="section sample-section">
+      <center><u id="show-more">Show more</u></center>
+      <div class="section sample-section sample-hide">
+        <div class="sample-img-container">
+          <img src="/sample_images/goerli_discord_faucet.png"></img>
+        </div>
+        <div class="sample-text-container">
+          <h1>Discord Arbitrum Testnet Faucet</h1>
+          <p>Gives testnet ETH and USDC on Arbitrum Goerli testnet. Automated the tedious process of manually sending out funds to hundreds of members.</p>
+          <div class="sample-quote">
+            <p>"Working with Prussia has been amazing, from the beginning to the end. I DMed him on telegram, and within minutes responded to my request. After that I explained to him what I needed, and they immediately got to work. I got everything I wanted, all done within 24hrs. Great service, and gave me exactly what I was looking for! Absolutely recommend!"</p>
+            <p>- Marcello, Bracket Labs</p>
+          </div>
+        </div>
       </div>
     </div>
     <div id="pitch-section" class="section short-section">
@@ -130,7 +142,7 @@
         changeWillMake();
         //function `changeWillMake` takes 3050 milliseconds... so
         setInterval(changeWillMake, 5500);
-      }, 2000);
+      }, 1750);
       
       function elementOnScreen(ele) {
         let viewport_height = document.documentElement.clientHeight;
@@ -197,6 +209,17 @@
           }
         }
       });
+
+      document.getElementById("show-more").onclick = function() {
+        document.getElementById('show-more').style.display = "none";
+        let all_hidden = document.querySelectorAll(".sample-hide");
+        //make sure animation doesn't happen for the first hidden one, because it looks weird
+        img_animation_applied.push(Array.from(document.getElementsByClassName("sample-img-container")).indexOf(all_hidden[0].querySelector('.sample-img-container')));
+        //unhide them
+        for (let i=0; i < all_hidden.length; i++) {
+          all_hidden[i].classList.remove('sample-hide');
+        }
+      }
     </script>
   </body>
 </html>
