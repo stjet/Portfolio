@@ -1,1 +1,3 @@
-Repldex, Bananojs, 
+Major: Repldex, Banano Mint
+Medium: Bananojs, Yellow Spyglass API, JungleTV
+Minor: dagchat
