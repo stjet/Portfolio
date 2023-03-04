@@ -55,14 +55,23 @@ h1 {
   padding-bottom: 10%;
 }
 
-#hireme {
+#misc {
   background-color: #0072C2;
   padding-top: 10%;
   padding-bottom: 10%;
 }
 
+.misc-p {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 .section-title {
   font-size: 50px;
+}
+
+.unsolicited-thoughts {
+  display: none;
 }
 
 #info {
