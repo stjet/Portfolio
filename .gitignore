@@ -1,2 +1,4 @@
 poetry.lock
 .cache/
+.replit
+replit.nix
