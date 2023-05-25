@@ -84,7 +84,7 @@
           <img src="sample_images/reddit_ban_bot_demo.png"></img>
         </div>
       </div>
-      <center><u id="show-more">Show more</u></center>
+      <div id="show-more-container"><u id="show-more">Show more</u></div>
       <div class="section sample-section sample-hide">
         <div class="sample-img-container">
           <img src="sample_images/goerli_discord_faucet.png"></img>
@@ -108,12 +108,12 @@
           </div>
         </div>
         <div class="sample-img-container">
-          <img src="sample_images/maxx_work.png"></img>
+          <img src="sample_images/maxx_work.png" loading="lazy"></img>
         </div>
       </div>
       <div class="section sample-section sample-hide">
         <div class="sample-img-container">
-          <img src="sample_images/aku_faucet.png"></img>
+          <img src="sample_images/aku_faucet.png" loading="lazy"></img>
         </div>
         <div class="sample-text-container">
           <h1>Aku Faucet</h1>
@@ -134,12 +134,12 @@
           </div>
         </div>
         <div class="sample-img-container">
-          <img src="sample_images/algo_raccoon.png"></img>
+          <img src="sample_images/algo_raccoon.png" loading="lazy"></img>
         </div>
       </div>
       <div class="section sample-section sample-hide">
         <div class="sample-img-container">
-          <img src="sample_images/moon_faucet.png"></img>
+          <img src="sample_images/moon_faucet.png" loading="lazy"></img>
         </div>
         <div class="sample-text-container">
           <h1>Moon Faucet</h1>
@@ -160,19 +160,86 @@
           </div>
         </div>
         <div class="sample-img-container">
-          <img src="sample_images/astral_credits.png"></img>
+          <img src="sample_images/astral_credits.png" loading="lazy"></img>
+        </div>
+      </div>
+      <!-- Favourite Personal Projects -->
+      <div id="favourite-personal" class="sample-hide">
+        <h1>Favourite Personal Projects</h1>
+      </div>
+      <div class="short-section sample-section sample-hide">
+        <div class="sample-img-container">
+          <img src="sample_images/ztmy.png" loading="lazy"></img>
+        </div>
+        <div class="sample-text-container">
+          <h1>ZTMY</h1>
+          <p>A cool concert viewer for Zutomayo. All styling is raw css, no css frameworks/libraries used.</p>
+          <div class="sample-links">
+            <ul>
+              <li>Using: Svelte (with Typescript), Tauri</li>
+              <li><a href="https://github.com/jetstream0/ztmy">Github</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="short-section sample-section sample-hide">
+        <div class="sample-text-container">
+          <h1>ETHTiles</h1>
+          <p>A smart contract and dApp that paints tiles in return for payment in ERC20 tokens.</p>
+          <div class="sample-links">
+            <ul>
+              <li>Using: Solidity, HTML+CSS+JS</li>
+              <li><a href="https://paint.prussia.dev">Site</a></li>
+              <li><a href="https://github.com/jetstream0/ETHTiles">Github</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="sample-img-container">
+          <img src="sample_images/ethtiles.png" loading="lazy"></img>
+        </div>
+      </div>
+      <div class="short-section sample-section sample-hide">
+        <div class="sample-img-container">
+          <img src="sample_images/bmp-editor.png" loading="lazy"></img>
+        </div>
+        <div class="sample-text-container">
+          <h1>BMP Editor</h1>
+          <p>A WASM site to create and edit .BMP files, using the BMP-Rust library (also written by me).</p>
+          <div class="sample-links">
+            <ul>
+              <li>Using: Yew (Rust), HTML+CSS+JS</li>
+              <li><a href="https://bmp.prussia.dev">Site</a></li>
+              <li><a href="https://github.com/jetstream0/BMP-Editor">Github</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="short-section sample-section sample-hide">
+        <div class="sample-text-container">
+          <h1>Faucet v2</h1>
+          <p>A multi-currency crypto faucet, made to be easily configurable. Frontend by HalfBakedBread.</p>
+          <div class="sample-links">
+            <ul>
+              <li>Using: Node.js, HTML+CSS+JS</li>
+              <li><a href="https://faucet.prussia.dev">Site</a></li>
+              <li><a href="https://github.com/jetstream0/Faucet-v2">Github</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="sample-img-container">
+          <img src="sample_images/faucet-v2.png" loading="lazy"></img>
         </div>
       </div>
     </div>
     <div id="pitch-section" class="section">
-      <center>
+      <div id="pitch-contents">
         <h1>Convinced?</h1>
         <p>Let's do this thing! Contact me on <a href="/to/discord">Discord</a> and we can talk. If you don't have Discord, you can contact me on <a href="https://t.me/prussia_de">Telegram</a>, or by <a href="mailto:prussia.dev@protonmail.com">Email</a>.<br>Also see my <a href="https://github.com/jetstream0">Github</a> for the various personal projects I've made.</p>
-      </center>
+      </div>
     </div>
     <script>
       let willMakeIndex = 0;
-      let willMakeText = ["Discord Bots", "Crypto Faucets", "Browser Extensions", "Automation Scripts", "Websites", "Reddit Bots", "Useful Tools", "Telegram Bots", "Games"];
+      let willMakeText = ["Discord Bots", "Crypto Faucets", "Browser Extensions", "Automation Scripts", "Websites", "Reddit Bots", "Useful Tools", "Packages", "Telegram Bots", "Games", "Smart Contracts"];
       
       async function changeWillMake() {
         //exit animation
