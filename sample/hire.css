@@ -15,7 +15,7 @@ body {
 }
 
 * {
-  font-family: Helvetica;
+  font-family: Helvetica, Arial;
 }
 
 #will-make {
@@ -82,7 +82,8 @@ body {
 }
 
 .sample-quote p {
-  font-family: Open Sans, OpenSansBackup;
+  font-family: "Open Sans", OpenSansBackup, Helvetica, Arial;
+  font-weight: bold;
 }
 
 .sample-links ul {
@@ -116,14 +117,18 @@ body {
 #favourite-personal h1 {
   color: #f5f5f5;
   font-size: 2.9em;
-  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.sample-img-container {
+  opacity: 0;
 }
 
 .sample-hide {
   display: none;
 }
 
-#pitch-section center {
+#pitch-contents {
   margin-top: 30vh;
 }
 
@@ -215,7 +220,7 @@ body {
   .short-section, .sample-section {
     height: auto;
   }
-  #pitch-section center {
+  #pitch-contents {
     margin-top: 32vh;
     padding-bottom: 33vh;
   }
