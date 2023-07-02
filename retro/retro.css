@@ -3,11 +3,15 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-family: "Times New Roman";
 }
 
 :root {
   --desktop-background: #008080;
   --gray-1: #c0c0c0;
+  --gray-2: #e0e0e0;
   --blue: #000080;
 }
 
@@ -18,9 +22,9 @@ html, body {
 }
 
 .window {
-  position: relative;
-  min-width: 100px;
-  min-height: 50px;
+  position: absolute;
+  min-width: 300px;
+  min-height: 150px;
   height: 35%;
   width: 40%;
   background-color: var(--gray-1);
@@ -42,15 +46,26 @@ html, body {
   cursor: move;
 }
 
+.window-title {
+  color: white;
+  font-weight: bold;
+}
+
 .window-content {
   width: 100%;
   height: calc(100% - 25px);
   padding: 15px;
   box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .window-top-buttons {
   float: right;
+}
+
+.window-top div {
+  display: inline-block;
 }
 
 .button-base {
@@ -76,10 +91,163 @@ html, body {
   font-size: 1em;
 }
 
+.inner-facing {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-bottom: 1px solid white;
+  border-right: 1px solid white;
+  height: 30px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.outer-facing {
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  height: 30px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
 #taskbar {
   width: 100%;
-  height: 40px;
+  height: 38px;
   background-color: var(--gray-1);
   position: fixed;
   bottom: 0;
+  padding: 4px;
+  border-top: 1px solid white;
+  box-sizing: border-box;
+  z-index: 999;
+}
+
+#taskbar div {
+  display: inline-block;
+}
+
+#taskbar-time-container {
+  float: right;
+}
+
+.taskbar-button {
+  display: inline-block;
+}
+
+.taskbar-tab {
+  min-width: 200px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.selected-tab {
+  background-color: var(--gray-2);
+}
+
+#taskbar-start {
+  font-weight: bold;
+}
+
+@keyframes rainbow-text {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 100vw;
+  }
+}
+
+#www {
+  background: linear-gradient(to right, red, green, blue, green, red);
+  background-size: 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation-name: "rainbow-text";
+  animation-duration: 22s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#welcome-h {
+  margin-bottom: 5px;
+}
+
+#start-window {
+  min-height: 275px;
+  min-width: 455px;
+}
+
+#start-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+#start-intro {
+  background-color: #ffffe1;
+  padding: 10px;
+}
+
+#start-buttons {
+  padding: 10px;
+}
+
+#stuff-i-like {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#stuff-i-like li {
+  margin-top: 4px;
+}
+
+#stuff-i-like li button {
+  width: 100%;
+}
+
+#wikipedia-window .window-content {
+  padding: 0;
+}
+
+#wikipedia-window iframe {
+  /*hardcoded values to prevent overflow and scrollbars, don't ask me why*/
+  width: calc(100% - 5px);
+  height: calc(100% - 10px);
+}
+
+.song {
+  display: grid;
+  column-gap: 5px;
+  grid-template-columns: auto auto;
+  padding: 5px 0px;
+}
+
+.album-cover-container img {
+  height: 82px;
+  width: 82px;
+}
+
+#music-window, #wikipedia-window, #programming-window, #minesweeper-window {
+  display: none;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+#portrait-warning {
+  display: none;
+}
+
+@media screen and (orientation: portrait) {
+  #desktop {
+    display: none;
+  }
+
+  #portrait-warning {
+    display: block;
+    margin: 10px;
+  }
 }

@@ -13,9 +13,119 @@
   </head>
   <body>
     <div id="desktop">
-      <div class="window">
+      <div class="window" id="start-window" style="left: 35px; top: 35px;">
         <div class="window-top">
-          <div></div>
+          <div class="window-title">
+            <span>Start</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 id="welcome-h">Welcome to my <span id="www">World Wide Web</span> page!</h2>
+          <div id="start-grid">
+            <div id="start-intro">
+              <h3>Hola, I'm Prussia</h3>
+              <p>I like programming. And websites.</p>
+              <p>Not sure what else to say here. Oh, this webpage is inspired by Windows NT and zutomayo.net.</p>
+              <noscript>Your Javascript is disabled btw. That's fine but don't expect any of the buttons to work :)</noscript>
+            </div>
+            <div id="start-buttons">
+              <h3>Stuff I like:</h3>
+              <ul id="stuff-i-like">
+                <li><button class="button-base outer-facing" onclick="open_window(event, 'Music')">Music</button></li>
+                <li><button class="button-base outer-facing" onclick="open_window(event, 'Wikipedia')">Wikipedia</button></li>
+                <li><button class="button-base outer-facing" onclick="open_window(event, 'Programming')">Programming</button></li>
+                <li><button class="button-base outer-facing" onclick="open_window(event, 'Minesweeper')">Minesweeper</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="window" id="music-window" style="left: 155px; top: 75px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Music</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2>Some songs I like</h2>
+          <div id="music-container">
+            <div class="song">
+              <div class="album-cover-container">
+                <img src="album-covers/hisohiso-banashi.png" title="Hisohiso Banashi - I do not own the album cover image yada yada"/>
+              </div>
+              <div class="song-info">
+                <h4><ruby>グラスとラムレーズン<rp>(</rp><rt>Glass to Rum Raisin</rt><rp>)</rp></ruby></h4>
+                <span class="song-artist">by Zutomayo</span>
+                <p>Some more by the same artist: "JK Bomber", "Inemuri Enseitai", "Samayoi Yoi Ondo", "Inner Heart"</p>
+              </div>
+            </div>
+            <div class="song">
+              <div class="album-cover-container">
+                <img src="album-covers/dakara-boku-wa-ongaku-wo-yameta.png" title="Dakara Boku wa Ongaku wo Yameta - I do not own the album cover image yada yada"/>
+              </div>
+              <div class="song-info">
+                <h4><ruby>五月は花緑青の窓辺から<rp>(</rp><rt>Gogatsu wa Hanarokushou no Madobe kara</rt><rp>)</rp></ruby></h4>
+                <span class="song-artist">by Yorushika</span>
+                <p>Some more by the same artist: "Robber and Bouquet", "Voice", "The Old Man and the Sea", "Hitchcock"</p>
+              </div>
+            </div>
+            <div class="song">
+              <div class="album-cover-container">
+                <img src="album-covers/odds-and-ends.png" title="Odds and Ends - I do not own the album cover image yada yada"/>
+              </div>
+              <div class="song-info">
+                <h4><ruby>夜間飛行<rp>(</rp><rt>Yakanhikou</rt><rp>)</rp></ruby></h4>
+                <span class="song-artist">by Nishina</span>
+                <p>Some more by the same artist: "Ainikoi", "Tokyo Marble", "Kedamono no Friends", "Yoruninatte"</p>
+              </div>
+            </div>
+            <div class="song">
+              <div class="album-cover-container">
+                <img src="album-covers/spd-gar.png" title="Spd Gar - I do not own the album cover image yada yada"/>
+              </div>
+              <div class="song-info">
+                <h4>Don't You Want Me</h4>
+                <span class="song-artist">by PSYQUI</span>
+                <p>Some more by the same artist: "Raise Your Hands", "Endroll", "Funk Assembly", "Education"</p>
+              </div>
+            </div>
+            <div class="song">
+              <div class="album-cover-container">
+                <img src="album-covers/we-have-fed-you-all-a-thousand-years.png" title="We Have Fed You All A Thousand Years - I do not own the album cover image yada yada"/>
+              </div>
+              <div class="song-info">
+                <h4>The Preacher and the Slave</h4>
+                <span>performed by Utah Phillips</span>
+                <p>Some more by the same artist: "Bread and Roses", "Halleluja, I'm a Bum", "The Popular Wobbly", "Solidarity Forever"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="window" id="wikipedia-window" style="left: 45px; top: 65px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Wikipedia</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <iframe src="https://en.wikipedia.org/wiki/Main_Page"></iframe>
+        </div>
+      </div>
+      <div class="window" id="programming-window" style="left: 95px; top: 65px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Programming</span>
+          </div>
           <div class="window-top-buttons">
             <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
           </div>
@@ -23,8 +133,205 @@
         <div class="window-content">
         </div>
       </div>
+      <div class="window" id="minesweeper-window" style="left: 15px; top: 105px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Minesweeper</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2>WIP</h2>
+        </div>
+      </div>
       <div id="taskbar">
+        <div>
+          <div id="taskbar-start" class="outer-facing" title="Click to reopen the Start window">
+            <span>Start</span>
+          </div>
+        </div>
+        <div id="taskbar-tabs">
+        </div>
+        <div id="taskbar-time-container">
+          <div id="taskbar-time" class="inner-facing" title="Unrelated to the magazine">
+            <span id="time">00:00</span>
+          </div>
+        </div>
       </div>
     </div>
+    <div id="portrait-warning">
+      <p>Hey bro! This site doesn't really work in portrait mode.</p>
+    </div>
+    <script>
+      let current_window = "start";
+      let window_z_index = 1;
+
+      function change_current_window(new_window) {
+        document.getElementById("taskbar-tabs").querySelectorAll(".inner-facing").forEach((tab) => {
+          tab.classList.remove("inner-facing");
+          tab.classList.add("outer-facing")
+        });
+        current_window = new_window;
+        document.getElementById("toolbar-tab-"+new_window).classList.add("inner-facing");
+        document.getElementById("toolbar-tab-"+new_window).classList.remove("outer-facing");
+        window_z_index++;
+        document.getElementById(new_window+"-window").style.zIndex = window_z_index;
+      }
+
+      //update time
+      function refresh_time() {
+        let hours = (new Date()).getHours();
+        let minutes = (new Date()).getMinutes();
+        document.getElementById("time").textContent = `${String(hours).length === 1 ? `0${hours}` : hours}:${String(minutes).length === 1 ? `0${minutes}` : minutes}`;
+      }
+      refresh_time();
+      setInterval(refresh_time, 55000);
+
+      //close buttons
+      document.querySelectorAll(".button-x").forEach((x) => {
+        x.parentElement.onclick = () => {
+          //hide window
+          let window_obj = x.parentElement.parentElement.parentElement.parentElement;
+          window_obj.style.display = "none";
+          document.getElementById("toolbar-tab-"+window_obj.id.replace("-window", "")).remove();
+        };
+      });
+
+      //drag the window tops
+      function px_to_int(px) {
+        return Number(px.replace("px", ""));
+      }
+      function int_to_px(int) {
+        return String(int)+"px";
+      }
+      document.querySelectorAll(".window-top").forEach((top) => {
+        let start_window_coords;
+        let start_mouse_coords;
+        top.onmousedown = (event) => {
+          start_mouse_coords = [event.clientX, event.clientY];
+          //coords of window
+          start_window_coords = [px_to_int(top.parentElement.style.left), px_to_int(top.parentElement.style.top)];
+        };
+        document.addEventListener("mouseup", () => {
+          start_mouse_coords = undefined;
+          start_window_coords = undefined;
+        });
+        document.addEventListener("mousemove", (event) => {
+          if (!start_mouse_coords || !start_window_coords) return;
+          //change window coords
+          let current_mouse_coords = [event.clientX, event.clientY];
+          let delta_x = current_mouse_coords[0]-start_mouse_coords[0];
+          let delta_y = current_mouse_coords[1]-start_mouse_coords[1];
+          let new_window_top = start_window_coords[1]+delta_y;
+          top.parentElement.style.left = int_to_px(start_window_coords[0]+delta_x);
+          top.parentElement.style.top = int_to_px(new_window_top);
+          //don't allow user to drag window below taskbar, and make sure window top is visible
+          if (new_window_top > window.innerHeight-38-25) {
+            top.parentElement.style.top = `${window.innerHeight-38-25}px`;
+          }
+          if (new_window_top < 0) {
+            top.parentElement.style.top = "0px";
+          }
+        });
+      });
+
+      //window expanding/shrinking
+      document.querySelectorAll(".window").forEach((window_obj) => {
+        let mouse_down = false;
+        let change = false;
+        let start_dimensions;
+        let start_mouse_coords;
+        window_obj.addEventListener("mousemove", (event) => {
+          change = false;
+          if (event.clientX > px_to_int(window_obj.style.left)+window_obj.offsetWidth-10) {
+            document.body.style.cursor = "col-resize";
+            change = "x";
+          } else if (document.body.style.cursor === "col-resize") {
+            if (!mouse_down) {
+              document.body.style.cursor = "auto";
+              change = false;
+            }
+            if (mouse_down) {
+              window_obj.style.width = int_to_px(start_dimensions[0] + (event.clientX - start_mouse_coords[0]));
+            }
+          }
+          if (event.clientY > px_to_int(window_obj.style.top)+window_obj.offsetHeight-10) {
+            document.body.style.cursor = "row-resize";
+            change = "y";
+          } else if (document.body.style.cursor === "row-resize") {
+            if (!mouse_down) {
+              document.body.style.cursor = "auto";
+              change = false;
+            }
+            if (mouse_down) {
+              window_obj.style.height = int_to_px(start_dimensions[1] + (event.clientY - start_mouse_coords[1]));
+            }
+          }
+        });
+        window_obj.addEventListener("mousedown", (event) => {
+          if (document.body.style.cursor === "col-resize" || document.body.style.cursor === "row-resize") {
+            start_mouse_coords = [event.clientX, event.clientY];
+            start_dimensions = [window_obj.offsetWidth, window_obj.offsetHeight];
+            mouse_down = true;
+          }
+        });
+        document.addEventListener("mouseup", (event) => {
+          mouse_down = false;
+          change = false;
+          if (document.body.style.cursor === "col-resize" || document.body.style.cursor === "row-resize") {
+            document.body.style.cursor = "auto";
+          }
+        });
+        document.addEventListener("mousemove", (event) => {
+          if (change === "x" && mouse_down) {
+            window_obj.style.width = int_to_px(start_dimensions[0] + (event.clientX - start_mouse_coords[0]));
+          } else if (change === "y" && mouse_down) {
+            window_obj.style.height = int_to_px(start_dimensions[1] + (event.clientY - start_mouse_coords[1]));
+          }
+        });
+        //also window moving
+        window_obj.addEventListener("click", (event) => {
+          //ignore if already current window
+          if (current_window === window_obj.id.replace("-window", "")) return;
+          change_current_window(window_obj.id.replace("-window", ""));
+        });
+      });
+
+      function create_taskbar_tab(tab_name) {
+        let tab = document.createElement("DIV");
+        tab.classList.add("taskbar-tab", "inner-facing", "selected-tab");
+        tab.id = `toolbar-tab-${tab_name.toLowerCase()}`;
+        tab.textContent = tab_name;
+        tab.onclick = () => {
+          if (tab.classList.contains("outer-facing")) {
+            change_current_window(tab_name.toLowerCase());
+          }
+        };
+        document.getElementById("taskbar-tabs").appendChild(tab);
+      }
+
+      //opening the button window things
+      function open_window(event, window_name) {
+        let window_obj = document.getElementById(window_name.toLowerCase()+"-window");
+        if (window_obj.style.display !== "block") {
+          window_obj.style.display = "block";
+          create_taskbar_tab(window_name);
+        }
+        change_current_window(window_name.toLowerCase());
+        event.stopPropagation();
+      }
+
+      //taskbar start
+      document.getElementById("taskbar-start").onclick = () => {
+        if (document.getElementById("start-window").style.display === "none") {
+          document.getElementById("start-window").style.display = "block";
+          create_taskbar_tab("Start");
+        }
+      };
+
+      create_taskbar_tab("Start");
+    </script>
   </body>
 </html>
