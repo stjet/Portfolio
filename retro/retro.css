@@ -10,6 +10,10 @@ html, body {
 
 :root {
   --desktop-background: #008080;
+  --desktop-background2: #3858a8;
+  --desktop-background3: #dc6c1c;
+  --desktop-background4: #177717;
+  --desktop-background5: #1A1A1A;
   --gray-1: #c0c0c0;
   --gray-2: #e0e0e0;
   --blue: #000080;
@@ -136,9 +140,13 @@ html, body {
 }
 
 .taskbar-tab {
-  min-width: 200px;
+  min-width: 12vw;
   font-weight: bold;
   margin-right: 5px;
+}
+
+.taskbar-tab-less-than-5 {
+  width: 16vw;
 }
 
 .selected-tab {
@@ -177,6 +185,21 @@ html, body {
 #start-window {
   min-height: 275px;
   min-width: 455px;
+  width: 455px;
+}
+
+#music-window {
+  height: 300px;
+}
+
+#programming-window {
+  height: 230px;
+}
+
+#wikipedia-window {
+  width: 620px;
+  height: 310px;
+  min-width: 500px;
 }
 
 #start-grid {
@@ -211,6 +234,10 @@ html, body {
   padding: 0;
 }
 
+#wikipedia-hidden {
+  color: var(--blue);
+}
+
 #wikipedia-window iframe {
   /*hardcoded values to prevent overflow and scrollbars, don't ask me why*/
   width: calc(100% - 5px);
@@ -229,7 +256,44 @@ html, body {
   width: 82px;
 }
 
-#music-window, #wikipedia-window, #programming-window, #minesweeper-window {
+#portrait-warning {
+  display: none;
+}
+
+#programs-list {
+  padding: 5px 0px;
+}
+
+#terminal-window .window-content {
+  font-family: monospace;
+  color: white;
+  background-color: black;
+}
+
+#terminal-command-input {
+  resize: none;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-family: monospace;
+  width: 100%;
+}
+
+#terminal-command-input:focus {
+  outline: none;
+}
+
+.terminal-response {
+  white-space: pre-wrap;
+  margin-bottom: 5px;
+}
+
+#terminal-input-container {
+  display: grid;
+  grid-template-columns: 3ch auto;
+}
+
+.window:not(#start-window) {
   display: none;
 }
 
@@ -237,8 +301,8 @@ h1, h2, h3, h4, h5, h6, p {
   margin: 0;
 }
 
-#portrait-warning {
-  display: none;
+hr {
+  border-bottom: 1px solid white;
 }
 
 @media screen and (orientation: portrait) {

@@ -6,7 +6,7 @@
     <meta name="title" content="Retro">
     <meta name="description" content="The retro version of my website.">
     <title>Retro</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/tiny-favicon.png" />
     <link href="retro.css" rel="stylesheet" type="text/css" />
     <!--To do: update my opinon site-->
     <!--<meta http-equiv="Onion-Location" content="http://eecflincupi352qlelnar7ahghmhrmiqil4p5cwjwimidsrwqxtlhbyd.onion/retro">-->
@@ -61,7 +61,7 @@
               </div>
               <div class="song-info">
                 <h4><ruby>グラスとラムレーズン<rp>(</rp><rt>Glass to Rum Raisin</rt><rp>)</rp></ruby></h4>
-                <span class="song-artist">by Zutomayo</span>
+                <span class="song-artist" title="hint1">by Zutomayo</span>
                 <p>Some more by the same artist: "JK Bomber", "Inemuri Enseitai", "Samayoi Yoi Ondo", "Inner Heart"</p>
               </div>
             </div>
@@ -111,14 +111,14 @@
       <div class="window" id="wikipedia-window" style="left: 45px; top: 65px;">
         <div class="window-top">
           <div class="window-title">
-            <span>Wikipedia</span>
+            <span>Wikipedia<span id="wikipedia-hidden">hint2 2023 27th jan did you know ww1</span></span>
           </div>
           <div class="window-top-buttons">
             <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
           </div>
         </div>
         <div class="window-content">
-          <iframe src="https://en.wikipedia.org/wiki/Main_Page"></iframe>
+          <iframe id="wikipedia-iframe"></iframe>
         </div>
       </div>
       <div class="window" id="programming-window" style="left: 95px; top: 65px;">
@@ -131,6 +131,14 @@
           </div>
         </div>
         <div class="window-content">
+          <h2>Programming stuff</h2>
+          <p>My favourite language at the moment is <b>Typescript</b>, but I'm pretty familiar with Rust, Python, and obviously HTML/CSS/JS. I also know a bit of Ruby and Solidity.</p>
+          <p>Most of my projects can be found on my <a href="https://github.com/jetstream0">Github</a> or the <a href="/">main page</a> of my website, and you can hire me <a href="/sample">here</a>.</p>
+          <hr/>
+          <p>For fun, here are some recreated Window NT programs:</p>
+          <div id="programs-list">
+            <button class="button-base outer-facing" onclick="open_window(event, 'Terminal')">Terminal</button>
+          </div>
         </div>
       </div>
       <div class="window" id="minesweeper-window" style="left: 15px; top: 105px;">
@@ -144,6 +152,25 @@
         </div>
         <div class="window-content">
           <h2>WIP</h2>
+        </div>
+      </div>
+      <div class="window" id="terminal-window" style="left: 25px; top: 85px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Terminal</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <p>Prussia's Terminal [version 0.4.2]</p>
+          <p>a joke about copyright here</p>
+          <p>type 'help' for help</p>
+          <br>
+          <div id="terminal-responses">
+          </div>
+          <div id="terminal-input-container"><span id="current-path">/></span> <input type="text" id="terminal-command-input"/></div>
         </div>
       </div>
       <div id="taskbar">
@@ -165,6 +192,11 @@
       <p>Hey bro! This site doesn't really work in portrait mode.</p>
     </div>
     <script>
+      //todo: minesweeper
+      //todo: final hint about chinese monkey king after beating minesweeper
+      //todo: sudo reward
+      //todo: implement desktop shortcuts?
+
       let current_window = "start";
       let window_z_index = 1;
 
@@ -190,12 +222,22 @@
       setInterval(refresh_time, 55000);
 
       //close buttons
+      function recount_taskbar_tabs() {
+        let tabs = document.querySelectorAll(".taskbar-tab");
+        if (tabs.length < 5) {
+          tabs.forEach((tab) => tab.classList.add("taskbar-tab-less-than-5"));
+        } else {
+          tabs.forEach((tab) => tab.classList.remove("taskbar-tab-less-than-5"));
+        }
+      }
+
       document.querySelectorAll(".button-x").forEach((x) => {
         x.parentElement.onclick = () => {
           //hide window
           let window_obj = x.parentElement.parentElement.parentElement.parentElement;
           window_obj.style.display = "none";
           document.getElementById("toolbar-tab-"+window_obj.id.replace("-window", "")).remove();
+          recount_taskbar_tabs();
         };
       });
 
@@ -310,6 +352,7 @@
           }
         };
         document.getElementById("taskbar-tabs").appendChild(tab);
+        recount_taskbar_tabs();
       }
 
       //opening the button window things
@@ -318,10 +361,272 @@
         if (window_obj.style.display !== "block") {
           window_obj.style.display = "block";
           create_taskbar_tab(window_name);
+          let iframe = document.getElementById("wikipedia-iframe");
+          if (window_name.toLowerCase() === "wikipedia" && iframe.src === "") {
+            iframe.src = "https://en.wikipedia.org/wiki/Main_Page";
+          }
         }
         change_current_window(window_name.toLowerCase());
-        event.stopPropagation();
+        if (event) event.stopPropagation();
       }
+
+      let current_path = "/";
+
+      let file_system = {
+        "desktop": {
+          //
+        },
+        "documents": {
+          "culture": {
+            "shogun2.txt": "Great game. Awesome music, fun battles. I'm not too good at it though.",
+            "manga.txt": "Nichijou, CITY, Senpai wa Otokonoko",
+          },
+          "philosophy.txt": "I like open source software, dependencies, and building things from scratch. Were you expecting something deep? Sorry.\nI feel like too much programming is about money. Sure, I get it. Everyone needs it or they'll starve and die. I program for money too. But it sucks. Open source software seems like the cure. Software that is free, accessible, and gives rights to the user is cool, isn't it?\nAnyways, onto dependencies and making things from scratch. I don't like them. It's more interesting building things yourself, and generally results in less bloat and samey looking stuff (looking at you, bootstrap). Obviously I'm no extremist, I do use libraries, especially when things are complex or security/cryptography related. But I feel like it's just more fun to make things from scratch.",
+        },
+        "music": {
+          //
+        },
+        "dev": {
+          "main.rs": "fn main() {\n  println!(\"Hola Mundo\");\n}",
+          "hint4.rs": "fn main() {\n  let part_uno: String = String::from_utf8(vec![0b11111011 & 0b01010011, 0b11111001 & 0b01010010, 0b01000000 | 0b01000001, 0b0100111 << 1, 0b11001011 ^ 0b10000010, 0b11011111 & 0b01010011, 0b010010 >> 1 << 3, 0b001 << 5, 0b11111111 & 0b01010011]).unwrap();\n  let part_dos: String = String::from_utf8(vec![0b01001011+2]).unwrap()+&(i8::MAX-126).to_string();\n  println!(\"{}UNK BYE {}NES\", part_uno, part_dos);\n}",
+        }
+      };
+
+      function path_to_obj(path) {
+        if (path === "/") {
+          return file_system;
+        } else {
+          let dirs = path.split("/");
+          //since path starts with "/", remove the empty string at start
+          dirs.shift();
+          let obj = file_system;
+          for (let i=0; i < dirs.length; i++) {
+            obj = obj[dirs[i]];
+            if (!obj || typeof obj === "string") {
+              return false;
+            }
+          }
+          return obj;
+        }
+      }
+
+      function get_file_contents(path) {
+        let dirs = path.split("/");
+        //since path starts with "/", remove the empty string at start
+        dirs.shift();
+        let obj = file_system;
+        for (let i=0; i < dirs.length; i++) {
+          obj = obj[dirs[i]];
+          if (i === dirs.length-1 && typeof obj === "string") {
+            return obj;
+          }
+          if (!obj) {
+            return false;
+          }
+        }
+      }
+
+      //terminal
+      const SUDO_PASSWORD = "584551CE9EA95ECDC51C60DAC39A046F51BD851453276EA679D031256AF856B2";
+
+      function utf8_to_uint8(utf8) {
+        let uint8 = new Uint8Array(utf8.length);
+        for (let i=0; i < utf8.length; i++) {
+          uint8[i] = utf8.charCodeAt(i);
+        }
+        return uint8;
+      }
+
+      //hex should be even length, obviously
+      function hex_to_uint8(hex) {
+        let hex_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
+        let uint8 = new Uint8Array(hex.length/2);
+        for (let i=0; i < hex.length/2; i++) {
+          uint8[i] = hex_chars.indexOf(hex[i])*16+hex_chars.indexOf(hex[i+1]);
+        }
+        return uint8;
+      }
+
+      function uint8_to_hex(uint8) {
+        let hex_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
+        let hex = "";
+        for (let i=0; i < uint8.length; i++) {
+          let first_char = Math.floor(uint8[i]/16);
+          let second_char = uint8[i]%16;
+          hex += hex_chars[first_char]+hex_chars[second_char];
+        }
+        return hex;
+      }
+
+      let wallpaper_index = 0;
+
+      document.getElementById("terminal-command-input").onkeydown = async (event) => {
+        //enter key
+        if (event.keyCode === 13) {
+          let old_current_path = current_path;
+          let value = document.getElementById("terminal-command-input").value;
+          document.getElementById("terminal-command-input").value = "";
+          let args = value.split(" ");
+          let command = args.shift();
+          let response;
+          if (command === "help") {
+            response = "Currently supported commands: help cd ls cat echo pwd wallpaper start music programming minesweeper terminal";
+          } else if (command === "pwd") {
+            response = current_path;
+          } else if (command === "cd") {
+            if (args[0]) {
+              if (args[0].endsWith("..")) {
+                //easier than fixing the root cause
+                args[0] += "/";
+              }
+              if ((args[0].startsWith("../") || args[0] === "..") && old_current_path !== "/") {
+                while (true) {
+                  let splitted = current_path.split("/");
+                  let popped = splitted.pop();
+                  if (popped === "") {
+                    //the .. was invalid
+                    break;
+                  }
+                  current_path = splitted.join("/");
+                  if (current_path === "") {
+                    current_path = "/";
+                  }
+                  //replaces one
+                  if (args[0].startsWith("../")) {
+                    args[0] = args[0].replace("../", "");
+                  } else if (args[0] === "..") {
+                    args[0] = "";
+                  }
+                  if (!args[0].startsWith("../")) break;
+                }
+              }
+            }
+            if (current_path.endsWith("/")) {
+              current_path += args[0];
+            } else if (args[0] !== "") {
+              current_path += "/"+args[0];
+            }
+            if (!path_to_obj(current_path)) {
+              current_path = old_current_path;
+              response = "Requested path does not exist";
+            } else {
+              response = "";
+            }
+          } else if (command === "ls") {
+            response = Object.keys(path_to_obj(current_path)).join(", ");
+            if (response.trim() === "") {
+              response = "Nothing here";
+            }
+          } else if (command === "echo") {
+            response = args.join(" ");
+          } else if (command === "cat") {
+            if (current_path.endsWith("/")) {
+              response = get_file_contents(current_path+args[0]);
+            } else {
+              response = get_file_contents(current_path+"/"+args[0]);
+            }
+            if (response === false) {
+              response = "Could not find file. `..` are not supported with the cat command";
+            }
+          } else if (command === "start" || command === "music" || command === "programming" || command === "minesweeper") {
+            open_window(false, command);
+            response = `Opened ${command}`;
+          } else if (command === "terminal") {
+            response = "Hmm...";
+          } else if (command === "sudo") {
+            if (!args[0]) {
+              response = "Include password as the first argument"
+            } else {
+              let hashed = uint8_to_hex(new Uint8Array(await window.crypto.subtle.digest("SHA-256", utf8_to_uint8(args[0]))));
+              if (hashed === SUDO_PASSWORD) {
+                response = "Success! This does nothing right now.";
+              } else if (args[0] === "password") {
+                response = "Success! Just kidding. Wrong password.";
+              } else {
+                response = `Wrong password: ${["remember, all lowercase", "remember, separated by hyphens", "remember, there are four parts, five dashes, six words"][Math.floor(Math.random()*3)]}`;
+              }
+            }
+          } else if (command === "wallpaper") {
+            let wallpapers = [
+              {
+                type: "backgroundColor",
+                value: "var(--desktop-background)",
+              },
+              {
+                type: "backgroundColor",
+                value: "var(--desktop-background2)",
+              },
+              {
+                type: "backgroundColor",
+                value: "var(--desktop-background3)",
+              },
+              {
+                type: "backgroundColor",
+                value: "var(--desktop-background4)",
+              },
+              {
+                type: "backgroundColor",
+                value: "var(--desktop-background5)",
+              },
+              {
+                type: "backgroundColor",
+                value: "white",
+              },
+              {
+                type: "backgroundImage",
+                value: "linear-gradient(to right, var(--desktop-background), green)",
+              },
+              {
+                type: "backgroundImage",
+                value: "linear-gradient(black, white, black)",
+              },
+              {
+                //the ztmy gradient
+                type: "backgroundImage",
+                value: "linear-gradient(to right, #BC0ABF, #7D45AA, #47168B)",
+              },
+            ];
+            if (!args[0]) {
+              response = "do `wallpaper next` and `wallpaper back` to cycle through desktop wallpapers";
+            } else {
+              if (args[0] === "next") {
+                wallpaper_index++;
+                if (wallpaper_index > wallpapers.length-1) {
+                  wallpaper_index = 0;
+                }
+              } else if (args[0] === "back") {
+                wallpaper_index--;
+                if (wallpaper_index < 0) {
+                  wallpaper_index = wallpapers.length-1;
+                }
+              }
+              //reset old wallpaper
+              document.getElementById("desktop").style.backgroundImage = "";
+              //set new wallpaper
+              let new_wallpaper = wallpapers[wallpaper_index];
+              document.getElementById("desktop").style[new_wallpaper.type] = new_wallpaper.value;
+              response = "Wallpaper changed";
+            }
+          } else if (command === "npm" && args[0] === "install") {
+            response = "[████████] Installing 700000 GB of packages..."
+          } else {
+            response = "Lo siento, unrecognized command. Type 'help' for a list of commands"
+          }
+          let result_ele = document.createElement("DIV");
+          let command_ele = document.createElement("P");
+          command_ele.textContent = `${old_current_path}> ${value}`;
+          result_ele.appendChild(command_ele);
+          let response_ele = document.createElement("P");
+          response_ele.innerText = response;
+          result_ele.classList.add("terminal-response");
+          result_ele.appendChild(response_ele);
+          document.getElementById("terminal-responses").appendChild(result_ele);
+          document.getElementById("current-path").textContent = current_path+">";
+          document.getElementById("terminal-input-container").style.gridTemplateColumns = `${current_path.length+2}ch auto`;
+          let window_content = document.getElementById("terminal-window").querySelector(".window-content");
+          window_content.scrollTo(0, window_content.scrollHeight);
+        }
+      };
 
       //taskbar start
       document.getElementById("taskbar-start").onclick = () => {
