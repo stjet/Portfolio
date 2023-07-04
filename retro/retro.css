@@ -193,7 +193,21 @@ html, body {
 }
 
 #programming-window {
-  height: 230px;
+  height: 235px;
+}
+
+#minesweeper-window {
+  min-width: 270px;
+  min-height: 296px;
+  max-width: 270px;
+  max-height: 296px;
+  width: 270px;
+  height: 300px;
+}
+
+#minesweeper-window .window-content {
+  padding: 0;
+  overflow-y: hidden;
 }
 
 #wikipedia-window {
@@ -285,6 +299,7 @@ html, body {
 
 .terminal-response {
   white-space: pre-wrap;
+  word-wrap: break-word;
   margin-bottom: 5px;
 }
 

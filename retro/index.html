@@ -144,14 +144,13 @@
       <div class="window" id="minesweeper-window" style="left: 15px; top: 105px;">
         <div class="window-top">
           <div class="window-title">
-            <span>Minesweeper</span>
+            <span>Minesweeper <span id="minesweeper-status"></span></span>
           </div>
           <div class="window-top-buttons">
             <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
           </div>
         </div>
-        <div class="window-content">
-          <h2>WIP</h2>
+        <div class="window-content" id="minesweeper-container">
         </div>
       </div>
       <div class="window" id="terminal-window" style="left: 25px; top: 85px;">
@@ -364,11 +363,58 @@
           let iframe = document.getElementById("wikipedia-iframe");
           if (window_name.toLowerCase() === "wikipedia" && iframe.src === "") {
             iframe.src = "https://en.wikipedia.org/wiki/Main_Page";
+          } else if (window_name.toLowerCase() === "minesweeper") {
+            //reset game
+            start_minesweeper();
           }
         }
         change_current_window(window_name.toLowerCase());
         if (event) event.stopPropagation();
       }
+
+      //music util functions
+      const audio_context = new (window.AudioContext || window.webkitAudioContext)();
+
+      let notes = {"G#6":1661.22,"G6":1567.98,"F#6":1479.98,"F6":1396.91,"E6":1318.51,"D#6":1244.51,"D6":1174.66,"C#6":1108.73,"C6":1046.5,"B5":987.77,"A#5":932.33,"A5":880,"G#5":830.61,"G5":783.99,"F#5":739.99,"F5":698.46,"E5":659.26,"D#5":622.25,"D5":587.33,"C#5":554.37,"C5":523.25,"B4":493.88,"A#4":466.16,"A4":440,"G#4":415.3,"G4":392,"F#4":369.99,"F4":349.23,"E4":329.63,"D#4":311.13,"D4":293.66,"C#4":277.18,"C4":261.63,"B3":246.94,"A#3":233.08,"A3":220,"G#3":207.652,"G3":195.998,"F#3":184.997,"F3":174.614,"E3":164.814,"D#3":155.563,"D3":146.832,"C#3":138.591,"C3":130.813,"B2":123.47,"A#2":116.54,"A2":110,"G#2":103.83,"G2":97.99,"F#2":92.49,"F2":87.307,"E2":82.407,"D#2":77.78,"D2":73.416,"C#2":69.296,"C2":65.406};
+
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function get_frequency(frequency, type) {
+        let oscillator = audio_context.createOscillator();
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        oscillator.connect(audio_context.destination);
+        return oscillator;
+      }
+
+      async function play_sound_file(sound_file) {
+        //format is something like bpm100\nG3:G3::E3:E4
+        let lines = sound_file.split("\n");
+        let duration = 60000/(Number(lines[0].split(":")[0].replace("bpm","")));
+        let type = lines[0].split(":")[1];
+        lines.shift();
+        for (let column=0; column < lines[0].split(":").length; column++) {
+          let to_play = [];
+          for (let line_num=0; line_num < lines.length; line_num++) {
+            let value = lines[line_num].split(":")[column];
+            if (!value) continue;
+            to_play.push(get_frequency(notes[value], type));
+          }
+          to_play.forEach((item) => item.start());
+          //console.log(column, to_play.map((item) => item.frequency.value))
+          if (to_play.length === 0) {
+            //await sleep(75);
+          } else {
+            await sleep(duration);
+          }
+          to_play.forEach((item) => item.stop());
+          //await sleep(10);
+        }
+      }
+
+      //file system
 
       let current_path = "/";
 
@@ -382,13 +428,15 @@
             "manga.txt": "Nichijou, CITY, Senpai wa Otokonoko",
           },
           "philosophy.txt": "I like open source software, dependencies, and building things from scratch. Were you expecting something deep? Sorry.\nI feel like too much programming is about money. Sure, I get it. Everyone needs it or they'll starve and die. I program for money too. But it sucks. Open source software seems like the cure. Software that is free, accessible, and gives rights to the user is cool, isn't it?\nAnyways, onto dependencies and making things from scratch. I don't like them. It's more interesting building things yourself, and generally results in less bloat and samey looking stuff (looking at you, bootstrap). Obviously I'm no extremist, I do use libraries, especially when things are complex or security/cryptography related. But I feel like it's just more fun to make things from scratch.",
+          "minesweeper.txt": "Win a game of minesweeper before you open me.",
         },
         "music": {
-          //
+          "byoushin-wo-kamu.play": "bpm260:sawtooth\n::C#5:::::C#5::::C#5::::C#5::::C#5::::C#5:\nF#4:G#4::B4:F#4::G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:G#4\n:E3:B3:E3:::F#3:A3:F#3:C#3:G#3:B3:G#3::D#3:F#3:D#3::E3:B3:E3::F#3:A3:F#3\nA2:::::B2::::::::G2::::A2::::B2:::",
         },
         "dev": {
           "main.rs": "fn main() {\n  println!(\"Hola Mundo\");\n}",
           "hint4.rs": "fn main() {\n  let part_uno: String = String::from_utf8(vec![0b11111011 & 0b01010011, 0b11111001 & 0b01010010, 0b01000000 | 0b01000001, 0b0100111 << 1, 0b11001011 ^ 0b10000010, 0b11011111 & 0b01010011, 0b010010 >> 1 << 3, 0b001 << 5, 0b11111111 & 0b01010011]).unwrap();\n  let part_dos: String = String::from_utf8(vec![0b01001011+2]).unwrap()+&(i8::MAX-126).to_string();\n  println!(\"{}UNK BYE {}NES\", part_uno, part_dos);\n}",
+          "count.bf": "i am absolutely horrid with thinking of algorithms (maybe thinking in general is my weak suit?) so the best brainfuck program i could make was this\nit takes an one digit input (0-9) then outputs a count of it\nlike if input is 8 the output is 12345678\n,------------------------------------------------>+++++++++++++.+++++++++++++++++++++++++++++++++++<[->+.<]",
         }
       };
 
@@ -470,9 +518,12 @@
           let command = args.shift();
           let response;
           if (command === "help") {
-            response = "Currently supported commands: help cd ls cat echo pwd wallpaper start music programming minesweeper terminal";
+            response = "Currently supported commands: help cd ls cat echo pwd clear wallpaper play loc cowsay start music programming minesweeper terminal";
           } else if (command === "pwd") {
             response = current_path;
+          } else if (command === "clear") {
+            document.getElementById("terminal-responses").innerHTML = "";
+            return;
           } else if (command === "cd") {
             if (args[0]) {
               if (args[0].endsWith("..")) {
@@ -607,6 +658,48 @@
               document.getElementById("desktop").style[new_wallpaper.type] = new_wallpaper.value;
               response = "Wallpaper changed";
             }
+          } else if (command === "play") {
+            if (!args[0]) {
+              response = "First argument should be .play file to play";
+            } else {
+              if (!args[0].endsWith(".play")) {
+                response = "File is not a .play file";
+              } else {
+                let file_content;
+                if (current_path.endsWith("/")) {
+                  file_content = get_file_contents(current_path+args[0]);
+                } else {
+                  file_content = get_file_contents(current_path+"/"+args[0]);
+                }
+                if (file_content === false) {
+                  response = "Could not find file. `..` are not supported with the play command";
+                }
+                play_sound_file(file_content);
+                response = "Playing";
+              }
+            }
+          } else if (command === "loc") {
+            response = `Lines of Javascript code on this page: ${document.querySelector("script").innerText.split("\n").length}`;
+          } else if (command === "cowsay") {
+            let cow_speech = args.join(" ");
+            response = " ________________________________________\n/ ";
+            if (cow_speech.length > 38) {
+              for (let i=0; i < Math.ceil(cow_speech.length/38); i++) {
+                let line = cow_speech.slice(38*i, 38*(i+1));
+                if (i === 0) {
+                  //if first line
+                  response += line+"\\";
+                } else if (i === Math.ceil(cow_speech.length/38)-1) {
+                  //if last line
+                  response += " \n\\ "+line+" ".repeat(38-line.length)+" /";
+                } else {
+                  response += " \n| "+line+" |";
+                }
+              }
+            } else {
+              response += cow_speech+" ".repeat(39-cow_speech.length)+"\\\n\\"+" ".repeat(40)+"/";
+            }
+            response += "\n ----------------------------------------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||";
           } else if (command === "npm" && args[0] === "install") {
             response = "[████████] Installing 700000 GB of packages..."
           } else {
@@ -637,6 +730,469 @@
       };
 
       create_taskbar_tab("Start");
+
+      //blackbeard
+      class Canvas {
+        /**
+         * @param {number[]} size
+         * @param {string} id
+         * @param {HTMLElement} parent
+         */
+        constructor(size, id, parent=undefined, contextOptions=undefined) {
+          this.size = size;
+          this.canvas = document.createElement("CANVAS");
+          this.canvas.id = id;
+          this.canvas.width = size[0];
+          this.canvas.height = size[1];
+          this.canvas.tabIndex = 1;
+          if (!parent) {
+            document.body.appendChild(this.canvas);
+          } else {
+            parent.appendChild(this.canvas);
+          }
+          this.context = this.canvas.getContext('2d', contextOptions);
+          this.components = [];
+          this.events = {};
+          //this.event_functions is not meant to be read. internal use only
+          this.event_functions = {};
+          this.frame = 0;
+          this.click_temp_disabled = false;
+        }
+        update() {
+          this.frame += 1;
+          this.clear();
+          //copy the components to account for any component deletions/additions,
+          //while running .update() for the components
+          let components_snapshot = this.components.slice();
+          for (let i=0; i < components_snapshot.length; i++) {
+            components_snapshot[i].update();
+          }
+        }
+        clear() {
+          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        reset() {
+          this.components = [];
+          document.body.style.cursor = "default";
+          //dont forget to remove all event listeners
+          for (let i=0; i < Object.keys(this.event_functions).length; i++) {
+            let event = Object.keys(this.event_functions)[i];
+            let event_function = this.event_functions[event];
+            this.canvas.removeEventListener(event, event_function);
+          }
+          this.event_functions = {};
+          this.events = {};
+        }
+        //new (name: string) => any means any class (eg TextButton)
+        /**
+         * @param {string} event
+         * @param {[new (name: string) => any]} objects
+         * @param {boolean} [overwrite=false]
+         */
+        addEvent(event, objects, overwrite=false) {
+          //prevent overwriting
+          if (this.events[event] && !overwrite) {
+            this.events[event] = [].concat(this.events[event], objects);
+          } else if (!this.events[event]) {
+            this.events[event] = objects;
+            //to make sure multiple event listeners arent added, only add the listener the first time addEvent() is called for event, after a reset/start. simplified; we only need one event listener per event, prevent there being multiple
+            //add components to the event separately
+            let self = this;
+            function canvasEventHandler(e) {
+              self.clearDeadEvents();
+              let event_items = self.events[event];
+              if (!event_items) {
+                return;
+              }
+              for (let i=0; i < event_items.length; i++) {
+                let component = event_items[i];
+                component[event](e);
+              }
+              if (e.type === "contextmenu" || e.type === "scroll") {
+                return false;
+              }
+            }
+            this.canvas.addEventListener(event, canvasEventHandler);
+            this.event_functions[event] = canvasEventHandler;
+          } else {
+            this.events[event] = objects;
+          }
+        }
+        //when components no longer exist, get rid of the events for them too
+        clearDeadEvents() {
+          for (let i=0; i < Object.keys(this.events).length; i++) {
+            let event_name = Object.keys(this.events)[i];
+            for (let j=0; j < this.events[event_name].length; j++) {
+              let obj = this.events[event_name][j];
+              //if component no longer exists
+              if (!this.components.includes(obj)) {
+                this.events[event_name].splice(j, 1);
+              }
+            }
+          }
+        }
+      }
+
+      class MineGrid {
+        constructor(canvas) {
+          //rare bug: if user clicks twice in very fast succession, the grid will generate twice and change
+          //generate mines
+          this.minefield = MineGrid.generate_minefield();
+          this.first_click = true;
+          //state is playing, lost, or won
+          this.game_state = "playing";
+          this.canvas = canvas;
+          //add click event
+          this.canvas.addEvent("click", [this], false);
+          //add to components
+          this.canvas.components.push(this);
+        }
+        static generate_minefield() {
+          //10% of squares should have mines, roughly
+          let minefield = [];
+          for (let row=0; row < 10; row++) {
+            let row = [];
+            for (let column=0; column < 10; column++) {
+              if (Math.random() < 0.1) {
+                row.push({
+                  mine: true,
+                  revealed: false,
+                  flagged: false,
+                });
+              } else {
+                row.push({
+                  mine: false,
+                  //placeholder
+                  mines_touching: 0,
+                  revealed: false,
+                  flagged: false,
+                });
+              }
+            }
+            minefield.push(row);
+          }
+          //calculate mines touching each non mine square
+          for (let row=0; row < 10; row++) {
+            for (let column=0; column < 10; column++) {
+              if (minefield[row][column].mine) continue;
+              let mines_touching = 0;
+              //I am aware I could probably just do this.minefield[row-1]?[column-1]?.mine but I feel like the protective if statements are better
+              //upper left
+              if (row !== 0 && column !== 0) {
+                if (minefield[row-1][column-1].mine) {
+                  mines_touching++;
+                }
+              }
+              //directly up
+              if (row !== 0) {
+                if (minefield[row-1][column].mine) {
+                  mines_touching++;
+                }
+              }
+              //upper right
+              if (row !== 0 && column !== 9) {
+                if (minefield[row-1][column+1].mine) {
+                  mines_touching++;
+                }
+              }
+              //directly left
+              if (column !== 0) {
+                if (minefield[row][column-1].mine) {
+                  mines_touching++;
+                }
+              }
+              //directly right
+              if (column !== 9) {
+                if (minefield[row][column+1].mine) {
+                  mines_touching++;
+                }
+              }
+              //lower left
+              if (row !== 9 && column !== 0) {
+                if (minefield[row+1][column-1].mine) {
+                  mines_touching++;
+                }
+              }
+              //directly lower
+              if (row !== 9) {
+                if (minefield[row+1][column].mine) {
+                  mines_touching++;
+                }
+              }
+              //lower right
+              if (row !== 9 && column !== 9) {
+                if (minefield[row+1][column+1].mine) {
+                  mines_touching++;
+                }
+              }
+              //update mines touching
+              minefield[row][column].mines_touching = mines_touching;
+            }
+          }
+          return minefield;
+        }
+        click(event) {
+          if (this.game_state !== "playing") return;
+          const CORNER_HEIGHT = 5;
+          let adjusted_x = event.offsetX - CORNER_HEIGHT;
+          let adjusted_y = event.offsetY - CORNER_HEIGHT;
+          if (adjusted_x < 0 || adjusted_y < 0) return;
+          if (adjusted_x > 270-CORNER_HEIGHT-5 || adjusted_y > 270-CORNER_HEIGHT-5) return;
+          const tile_dimension = (270-CORNER_HEIGHT*2)/10;
+          let tile_x = Math.floor(adjusted_x/tile_dimension);
+          let tile_y = Math.floor(adjusted_y/tile_dimension);
+          let tile = this.minefield[tile_y][tile_x];
+          if (this.first_click && (tile.mine || tile.mines_touching !== 0)) {
+            this.first_click = false;
+            //regenerate minefield, until it starts on a square without any mines touching
+            while (true) {
+              this.minefield = MineGrid.generate_minefield();
+              tile = this.minefield[tile_y][tile_x];
+              if (!tile.mine && tile.mines_touching === 0) {
+                break;
+              }
+            }
+          }
+          //tile already clicked
+          if (tile.revealed) return;
+          this.minefield[tile_y][tile_x].revealed = true;
+          //now see if its a mine, or empty, or a number
+          if (tile.mine) {
+            this.game_state = "lost";
+            //announce loss
+            document.getElementById("minesweeper-status").textContent = "- You lost!";
+          } else {
+            if (tile.mines_touching === 0) {
+              //open all neighbouring tiles
+              //values should be unique, but these are arrays. so turn them into json. kinda hacky, sorry
+              let queue = new Set([JSON.stringify([tile_x, tile_y])]);
+              Set.prototype.json_add = function (item) {
+                this.add(JSON.stringify(item));
+              }
+              while (true) {
+                if (queue.size === 0) break;
+                let q_first = JSON.parse(queue.values().next().value);
+                let q_x = q_first[0];
+                let q_y = q_first[1];
+                let q_tile = this.minefield[q_y][q_x];
+                if (q_tile.mines_touching === 0 && !queue.revealed) {
+                  //add surrounding tiles
+                  if (q_y !== 0) {
+                    //upper left
+                    if (q_x !== 0 && !this.minefield[q_y-1][q_x-1].revealed) {
+                      queue.json_add([q_x-1, q_y-1]);
+                    }
+                    //directly upper
+                    if (!this.minefield[q_y-1][q_x].revealed) {
+                      queue.json_add([q_x, q_y-1]);
+                    }
+                    //upper right
+                    if (q_x !== 9 && !this.minefield[q_y-1][q_x+1].revealed) {
+                      queue.json_add([q_x+1, q_y-1]);
+                    }
+                  }
+                  if (q_x !== 0 && !this.minefield[q_y][q_x-1].revealed) {
+                    //directly left
+                    queue.json_add([q_x-1, q_y]);
+                  }
+                  if (q_x !== 9 && !this.minefield[q_y][q_x+1].revealed) {
+                    //directly right
+                    queue.json_add([q_x+1, q_y]);
+                  }
+                  if (q_y !== 9) {
+                    //lower left
+                    if (q_x !== 0 && !this.minefield[q_y+1][q_x-1].revealed) {
+                      queue.json_add([q_x-1, q_y+1]);
+                    }
+                    //directly lower
+                    if (!this.minefield[q_y+1][q_x].revealed) {
+                      queue.json_add([q_x, q_y+1]);
+                    }
+                    //lower right
+                    if (q_x !== 9 && !this.minefield[q_y+1][q_x+1].revealed) {
+                      queue.json_add([q_x+1, q_y+1]);
+                    }
+                  }
+                }
+                this.minefield[q_y][q_x].revealed = true;
+                queue.delete(JSON.stringify([q_x, q_y]));
+              }
+            }
+            //check for victory
+            let won = [].concat(...this.minefield).every((item) => {
+              return (!item.mine && !item.revealed) ? false : true;
+            });
+            if (won) {
+              const DARK = "#808080";
+              this.game_state = "won";
+              //announce win
+              document.getElementById("minesweeper-status").textContent = "- You won!";
+              file_system["documents"]["minesweeper.txt"] = "In case you couldn't read the hint at the bottom left of the minesweeper window, it says 'hint3 chinese monkey king'. Oh uh and don't forget that you can play another round by closing and reopening the window.";
+            }
+          }
+          //finally, update canvas
+          canvas.update();
+        }
+        update() {
+          const DARK = "#808080";
+          const LIGHT = "white";
+          const NORMAL = "#c0c0c0";
+          //draw the corners of the field
+          const CORNER_HEIGHT = 5;
+          let top = new Path2D();
+          top.moveTo(0, 0);
+          top.lineTo(270, 0);
+          top.lineTo(270-CORNER_HEIGHT, CORNER_HEIGHT);
+          top.lineTo(0, CORNER_HEIGHT);
+          top.lineTo(0, 0);
+          this.canvas.context.fillStyle = DARK;
+          this.canvas.context.fill(top);
+          let left = new Path2D();
+          left.moveTo(0, 0);
+          left.lineTo(0, 270);
+          left.lineTo(CORNER_HEIGHT, 270-CORNER_HEIGHT);
+          left.lineTo(CORNER_HEIGHT, 0);
+          left.lineTo(0, 0);
+          this.canvas.context.fill(left);
+          let right = new Path2D();
+          right.moveTo(270, 0);
+          right.lineTo(270, 270);
+          right.lineTo(270-CORNER_HEIGHT, 270);
+          right.lineTo(270-CORNER_HEIGHT, CORNER_HEIGHT);
+          right.lineTo(270, 0);
+          this.canvas.context.fillStyle = LIGHT;
+          this.canvas.context.fill(right);
+          let bottom = new Path2D();
+          bottom.moveTo(0, 270);
+          bottom.lineTo(270, 270);
+          bottom.lineTo(270, 270-CORNER_HEIGHT);
+          bottom.lineTo(CORNER_HEIGHT, 270-CORNER_HEIGHT);
+          bottom.lineTo(0, 270);
+          this.canvas.context.fill(bottom);
+          if (this.game_state === "won") {
+            this.canvas.context.font = "8px Arial";
+            this.canvas.context.fillStyle = "gray";
+            this.canvas.context.fillText("hint3 chinese monkey king", 5, 270);
+          }
+          //10x10 mines, canvas is 270x270
+          const CORNER_HEIGHT_TILE = 3;
+          const tile_dimension = (270-CORNER_HEIGHT*2)/10;
+          for (let row_num=0; row_num < 10; row_num++) {
+            let row = this.minefield[row_num];
+            for (let column_num=0; column_num < 10; column_num++) {
+              let tile = row[column_num];
+              //technically top left
+              let top_x = tile_dimension*column_num+CORNER_HEIGHT;
+              let top_y = tile_dimension*row_num+CORNER_HEIGHT;
+              //square
+              this.canvas.context.fillStyle = NORMAL;
+              this.canvas.context.fillRect(top_x, top_y, tile_dimension, tile_dimension);
+              this.canvas.context.lineWidth = 2;
+              this.canvas.context.strokeStyle = DARK;
+              this.canvas.context.strokeRect(top_x, top_y, tile_dimension, tile_dimension);
+              //technically bottom right
+              let bottom_x = top_x+tile_dimension;
+              let bottom_y = top_y+tile_dimension;
+              if (tile.revealed) {
+                if (tile.mine) {
+                  let x_left = new Path2D();
+                  x_left.moveTo(top_x, top_y);
+                  x_left.lineTo(bottom_x, bottom_y);
+                  this.canvas.context.strokeStyle = "red";
+                  this.canvas.context.lineWidth = 2;
+                  this.canvas.context.stroke(x_left);
+                  let x_right = new Path2D();
+                  x_right.moveTo(top_x, bottom_y);
+                  x_right.lineTo(bottom_x, top_y);
+                  this.canvas.context.stroke(x_right);
+                } else {
+                  if (tile.mines_touching > 0) {
+                    //coords is bottom left of text
+                    const font_size = 18;
+                    this.canvas.context.font = `bold ${font_size}px Arial`;
+                    let fill_color;
+                    switch (tile.mines_touching) {
+                      case 1:
+                        fill_color = "blue";
+                        break;
+                      case 2:
+                        fill_color = "green";
+                        break;
+                      case 3:
+                        fill_color = "red";
+                        break;
+                      case 4:
+                        fill_color = "purple";
+                        break;
+                      case 5:
+                        fill_color = "maroon";
+                        break;
+                      case 6:
+                        fill_color = "aquamarine";
+                        break;
+                      case 7:
+                        fill_color = "black";
+                        break;
+                      case 8:
+                        fill_color = "gray";
+                        break;
+                      default:
+                        //not possible
+                        fill_color = "black";
+                    }
+                    let text_width = this.canvas.context.measureText(String(tile.mines_touching)).width;
+                    this.canvas.context.fillStyle = fill_color;
+                    this.canvas.context.fillText(String(tile.mines_touching), top_x+Math.round((tile_dimension-text_width)/2), bottom_y-(tile_dimension-font_size));
+                  }
+                }
+              } else if (tile.flagged) {
+                //
+              } else {
+                //draw corners
+                let tile_top = new Path2D();
+                tile_top.moveTo(top_x, top_y);
+                tile_top.lineTo(bottom_x, top_y);
+                tile_top.lineTo(bottom_x-CORNER_HEIGHT_TILE, top_y+CORNER_HEIGHT_TILE);
+                tile_top.lineTo(top_x, top_y+CORNER_HEIGHT_TILE);
+                tile_top.lineTo(top_x, top_y);
+                this.canvas.context.fillStyle = LIGHT;
+                this.canvas.context.fill(tile_top);
+                let tile_left = new Path2D();
+                tile_left.moveTo(top_x, top_y);
+                tile_left.lineTo(top_x, bottom_y);
+                tile_left.lineTo(top_x+CORNER_HEIGHT_TILE, bottom_y-CORNER_HEIGHT_TILE);
+                tile_left.lineTo(top_x+CORNER_HEIGHT_TILE, top_y);
+                tile_left.lineTo(top_x, top_y);
+                this.canvas.context.fill(tile_left);
+                let tile_right = new Path2D();
+                tile_right.moveTo(bottom_x, top_y);
+                tile_right.lineTo(bottom_x, bottom_y);
+                tile_right.lineTo(bottom_x-CORNER_HEIGHT_TILE, bottom_y);
+                tile_right.lineTo(bottom_x-CORNER_HEIGHT_TILE, top_y+CORNER_HEIGHT_TILE);
+                tile_right.lineTo(bottom_x, top_y);
+                this.canvas.context.fillStyle = DARK;
+                this.canvas.context.fill(tile_right);
+                let tile_bottom = new Path2D();
+                tile_bottom.moveTo(top_x, bottom_y);
+                tile_bottom.lineTo(bottom_x, bottom_y);
+                tile_bottom.lineTo(bottom_x, bottom_y-CORNER_HEIGHT_TILE);
+                tile_bottom.lineTo(top_x+CORNER_HEIGHT_TILE, bottom_y-CORNER_HEIGHT_TILE);
+                tile_bottom.lineTo(top_x, bottom_y);
+                this.canvas.context.fill(tile_bottom);
+              }
+            }
+          }
+        }
+      }
+
+      let canvas = new Canvas([270, 270], "minesweeper-canvas", document.getElementById("minesweeper-container"));
+
+      function start_minesweeper() {
+        document.getElementById("minesweeper-status").textContent = "";
+        canvas.reset();
+        new MineGrid(canvas);
+        canvas.update();
+      }
     </script>
   </body>
 </html>
