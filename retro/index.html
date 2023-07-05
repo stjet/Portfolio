@@ -138,6 +138,7 @@
           <p>For fun, here are some recreated Window NT programs:</p>
           <div id="programs-list">
             <button class="button-base outer-facing" onclick="open_window(event, 'Terminal')">Terminal</button>
+            <button class="button-base outer-facing" onclick="open_window(event, 'Calculator')">Calculator</button>
           </div>
         </div>
       </div>
@@ -172,6 +173,61 @@
           <div id="terminal-input-container"><span id="current-path">/></span> <input type="text" id="terminal-command-input"/></div>
         </div>
       </div>
+      <div class="window" id="calculator-window" style="left: 15px; top: 105px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>Calculator</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <div id="calc-input">
+            <div>
+              <input type="text" value="doesnt work yet" disabled/>
+            </div>
+          </div>
+          <div id="calc-first-row">
+            <div id="calc-blank" class="inner-facing calc-btn calc-reg"></div>
+            <div id="calc-first-row-right">
+              <button class="outer-facing calc-btn calc-maroon calc-long">Back</button>
+              <button class="outer-facing calc-btn calc-maroon calc-long">CE</button>
+              <button class="outer-facing calc-btn calc-maroon calc-long">C</button>
+            </div>
+          </div>
+          <div id="calc-container">
+            <div id="calc-column">
+              <button class="outer-facing calc-btn calc-red calc-reg">MC</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">MR</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">MS</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">M+</button>
+            </div>
+            <div id="calc-grid">
+              <button class="outer-facing calc-btn calc-blue calc-reg">7</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">8</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">9</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">/</button>
+              <button class="outer-facing calc-btn calc-darkblue calc-reg">sqrt</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">4</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">5</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">6</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">*</button>
+              <button class="outer-facing calc-btn calc-darkblue calc-reg">%</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">1</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">2</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">3</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">-</button>
+              <button class="outer-facing calc-btn calc-darkblue calc-reg">1/x</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">0</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">+/-</button>
+              <button class="outer-facing calc-btn calc-blue calc-reg">.</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">+</button>
+              <button class="outer-facing calc-btn calc-red calc-reg">=</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="taskbar">
         <div>
           <div id="taskbar-start" class="outer-facing" title="Click to reopen the Start window">
@@ -191,9 +247,8 @@
       <p>Hey bro! This site doesn't really work in portrait mode.</p>
     </div>
     <script>
-      //todo: minesweeper
-      //todo: final hint about chinese monkey king after beating minesweeper
-      //todo: sudo reward
+      //todo: sudo reward - read/write fs access? secret window?
+      //todo: get calculator to at least semi work
       //todo: implement desktop shortcuts?
 
       let current_window = "start";
@@ -250,24 +305,29 @@
       document.querySelectorAll(".window-top").forEach((top) => {
         let start_window_coords;
         let start_mouse_coords;
-        top.onmousedown = (event) => {
+        function m_down_handler(event) {
           start_mouse_coords = [event.clientX, event.clientY];
           //coords of window
           start_window_coords = [px_to_int(top.parentElement.style.left), px_to_int(top.parentElement.style.top)];
-        };
-        document.addEventListener("mouseup", () => {
+        }
+        top.onmousedown = m_down_handler;
+        top.ontouchstart = (event) => m_down_handler(event.touches[0]);
+        function m_up_handler() {
           start_mouse_coords = undefined;
           start_window_coords = undefined;
-        });
-        document.addEventListener("mousemove", (event) => {
+        }
+        document.addEventListener("mouseup", m_up_handler);
+        document.addEventListener("touchend", m_up_handler);
+        function m_move_handler(event) {
           if (!start_mouse_coords || !start_window_coords) return;
           //change window coords
           let current_mouse_coords = [event.clientX, event.clientY];
           let delta_x = current_mouse_coords[0]-start_mouse_coords[0];
           let delta_y = current_mouse_coords[1]-start_mouse_coords[1];
           let new_window_top = start_window_coords[1]+delta_y;
-          top.parentElement.style.left = int_to_px(start_window_coords[0]+delta_x);
+          let new_window_left = start_window_coords[0]+delta_x;
           top.parentElement.style.top = int_to_px(new_window_top);
+          top.parentElement.style.left = int_to_px(new_window_left);
           //don't allow user to drag window below taskbar, and make sure window top is visible
           if (new_window_top > window.innerHeight-38-25) {
             top.parentElement.style.top = `${window.innerHeight-38-25}px`;
@@ -275,7 +335,15 @@
           if (new_window_top < 0) {
             top.parentElement.style.top = "0px";
           }
-        });
+          if (new_window_left > window.innerWidth-25) {
+            top.parentElement.style.left = `${window.innerWidth-25}px`;
+          }
+          if (new_window_left < -top.parentElement.clientWidth+25) {
+            top.parentElement.style.left = `${-top.parentElement.clientWidth+25}px`;
+          }
+        }
+        document.addEventListener("mousemove", m_move_handler);
+        document.addEventListener("touchmove", (event) => m_move_handler(event.touches[0]));
       });
 
       //window expanding/shrinking
@@ -318,7 +386,12 @@
             mouse_down = true;
           }
         });
-        document.addEventListener("mouseup", (event) => {
+        window_obj.addEventListener("mouseleave", () => {
+          if (document.body.style.cursor === "col-resize" || document.body.style.cursor === "row-resize") {
+            document.body.style.cursor = "auto";
+          }
+        });
+        document.addEventListener("mouseup", () => {
           mouse_down = false;
           change = false;
           if (document.body.style.cursor === "col-resize" || document.body.style.cursor === "row-resize") {
@@ -394,6 +467,7 @@
         let lines = sound_file.split("\n");
         let duration = 60000/(Number(lines[0].split(":")[0].replace("bpm","")));
         let type = lines[0].split(":")[1];
+        let quick_rest = lines[0].split(":")[2] === "quick";
         lines.shift();
         for (let column=0; column < lines[0].split(":").length; column++) {
           let to_play = [];
@@ -403,9 +477,16 @@
             to_play.push(get_frequency(notes[value], type));
           }
           to_play.forEach((item) => item.start());
-          //console.log(column, to_play.map((item) => item.frequency.value))
           if (to_play.length === 0) {
-            //await sleep(75);
+            if (quick_rest) {
+              if (duration < 250) {
+                await sleep(20);
+              } else {
+                await sleep(50);
+              }
+            } else {
+              await sleep(duration);
+            }
           } else {
             await sleep(duration);
           }
@@ -432,6 +513,10 @@
         },
         "music": {
           "byoushin-wo-kamu.play": "bpm260:sawtooth\n::C#5:::::C#5::::C#5::::C#5::::C#5::::C#5:\nF#4:G#4::B4:F#4::G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:G#4\n:E3:B3:E3:::F#3:A3:F#3:C#3:G#3:B3:G#3::D#3:F#3:D#3::E3:B3:E3::F#3:A3:F#3\nA2:::::B2::::::::G2::::A2::::B2:::",
+          "hana-ni-bourei.play": "bpm230:triangle\nG#5::G#5:G#5:G#5:G#5:G#5:A5:G#5:F#5:E5::E5:E5:E5:E5:E5:E5:E5:F#5::E5:E5:G#5:F#5\n:::::::::::B4:::::::::::::\n:E4::B4:::::E4::B4::::::F#4::::::::\nF#3::::::::::::E3::B3::::::D#3::B3::\n:::::::B2:::::::::::::::::",
+          "super-mario.play": "bpm290:triangle:quick\nE5:E5:::E5:::C5:::E5::::G5:::::\nA4:A4:::A4:::A4:::A4::::B4:::::\nF#4:F#4:::F#4:::F#4:::F#4::::G4:::::G4\n:::::::::::::::::::G3\nD2:D2:::D2:::D2:::D2::::G2:::::G2",
+          "eulogy-nnom.play": "bpm200:square\nC4:::D4:::D#4::::D4:::D#4:::F4:::::G4:D#4:C4:G#3::::G#3::A#3:G3::::::::C4::D4:D#4::C4::D4::D#4:F4::D4::D#4::F4::G4::D#4::A#4:G#4:G4:G#4:F4:G4:D#4:F4:D4:D4:D4:D4:D4:D4:D4:D4\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::A#3:G#3:G3:G#3:F3:G3:D#3:F3:D3:D3:D3:D3:D3:D3:D3:D3\n:::::::::::::::::::::::::::::::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2",
+          "info.txt": "I obviously did not make any of these songs.",
         },
         "dev": {
           "main.rs": "fn main() {\n  println!(\"Hola Mundo\");\n}",
