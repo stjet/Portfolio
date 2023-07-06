@@ -87,6 +87,8 @@ html, body {
 .window-top-button {
   height: 17px;
   width: 17px;
+  padding: 0;
+  margin: 0;
 }
 
 .button-x {
@@ -147,6 +149,10 @@ html, body {
 
 .taskbar-tab-less-than-5 {
   width: 16vw;
+}
+
+.taskbar-tab-more-than-7 {
+  min-width: 9vw;
 }
 
 .selected-tab {

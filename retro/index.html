@@ -61,7 +61,7 @@
               </div>
               <div class="song-info">
                 <h4><ruby>グラスとラムレーズン<rp>(</rp><rt>Glass to Rum Raisin</rt><rp>)</rp></ruby></h4>
-                <span class="song-artist" title="hint1">by Zutomayo</span>
+                <span class="song-artist" title="hint3">by Zutomayo</span>
                 <p>Some more by the same artist: "JK Bomber", "Inemuri Enseitai", "Samayoi Yoi Ondo", "Inner Heart"</p>
               </div>
             </div>
@@ -185,7 +185,7 @@
         <div class="window-content">
           <div id="calc-input">
             <div>
-              <input type="text" value="doesnt work yet" disabled/>
+              <input id="calc-input-actual" type="text" value="not all buttons work" disabled/>
             </div>
           </div>
           <div id="calc-first-row">
@@ -228,6 +228,25 @@
           </div>
         </div>
       </div>
+      <div class="window" id="himitsu-window" style="left: 35px; top: 90px;">
+        <div class="window-top">
+          <div class="window-title">
+            <span>秘密</span>
+          </div>
+          <div class="window-top-buttons">
+            <button class="button-base window-top-button"><span class="button-inside button-x">x</span></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <p id="secret-intro"></p>
+          <ul id="secret-list">
+            <li id="secret-1" class="spoiler"></li>
+            <li id="secret-2" class="spoiler"></li>
+            <li id="secret-3" class="spoiler"></li>
+          </ul>
+          <p id="secret-project"></p>
+        </div>
+      </div>
       <div id="taskbar">
         <div>
           <div id="taskbar-start" class="outer-facing" title="Click to reopen the Start window">
@@ -247,9 +266,10 @@
       <p>Hey bro! This site doesn't really work in portrait mode.</p>
     </div>
     <script>
-      //todo: sudo reward - read/write fs access? secret window?
+      //todo: sudo reward - write fs access?
       //todo: get calculator to at least semi work
       //todo: implement desktop shortcuts?
+      //todo: flagging in minesweeper? probably not needed
 
       let current_window = "start";
       let window_z_index = 1;
@@ -279,9 +299,20 @@
       function recount_taskbar_tabs() {
         let tabs = document.querySelectorAll(".taskbar-tab");
         if (tabs.length < 5) {
-          tabs.forEach((tab) => tab.classList.add("taskbar-tab-less-than-5"));
+          tabs.forEach((tab) => {
+            tab.classList.add("taskbar-tab-less-than-5");
+            tab.classList.remove("taskbar-tab-more-than-7");
+          });
+        } else if (tabs.length > 7) {
+          tabs.forEach((tab) => {
+            tab.classList.remove("taskbar-tab-less-than-5");
+            tab.classList.add("taskbar-tab-more-than-7");
+          });
         } else {
-          tabs.forEach((tab) => tab.classList.remove("taskbar-tab-less-than-5"));
+          tabs.forEach((tab) => {
+            tab.classList.remove("taskbar-tab-less-than-5");
+            tab.classList.remove("taskbar-tab-more-than-7");
+          });
         }
       }
 
@@ -439,6 +470,13 @@
           } else if (window_name.toLowerCase() === "minesweeper") {
             //reset game
             start_minesweeper();
+          } else if (window_name.toLowerCase() === "calculator") {
+            //these are defined later
+            current_total = undefined;
+            current_operation = undefined;
+            current_value = undefined;
+            document.getElementById("calc-input-actual").value = "not all buttons work";
+            setTimeout(() => document.getElementById("calc-input-actual").value = "0", 1000);
           }
         }
         change_current_window(window_name.toLowerCase());
@@ -446,15 +484,13 @@
       }
 
       //music util functions
-      const audio_context = new (window.AudioContext || window.webkitAudioContext)();
-
       let notes = {"G#6":1661.22,"G6":1567.98,"F#6":1479.98,"F6":1396.91,"E6":1318.51,"D#6":1244.51,"D6":1174.66,"C#6":1108.73,"C6":1046.5,"B5":987.77,"A#5":932.33,"A5":880,"G#5":830.61,"G5":783.99,"F#5":739.99,"F5":698.46,"E5":659.26,"D#5":622.25,"D5":587.33,"C#5":554.37,"C5":523.25,"B4":493.88,"A#4":466.16,"A4":440,"G#4":415.3,"G4":392,"F#4":369.99,"F4":349.23,"E4":329.63,"D#4":311.13,"D4":293.66,"C#4":277.18,"C4":261.63,"B3":246.94,"A#3":233.08,"A3":220,"G#3":207.652,"G3":195.998,"F#3":184.997,"F3":174.614,"E3":164.814,"D#3":155.563,"D3":146.832,"C#3":138.591,"C3":130.813,"B2":123.47,"A#2":116.54,"A2":110,"G#2":103.83,"G2":97.99,"F#2":92.49,"F2":87.307,"E2":82.407,"D#2":77.78,"D2":73.416,"C#2":69.296,"C2":65.406};
 
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
 
-      function get_frequency(frequency, type) {
+      function get_frequency(audio_context, frequency, type) {
         let oscillator = audio_context.createOscillator();
         oscillator.type = type;
         oscillator.frequency.value = frequency;
@@ -463,6 +499,7 @@
       }
 
       async function play_sound_file(sound_file) {
+        const audio_context = new (window.AudioContext || window.webkitAudioContext)();
         //format is something like bpm100\nG3:G3::E3:E4
         let lines = sound_file.split("\n");
         let duration = 60000/(Number(lines[0].split(":")[0].replace("bpm","")));
@@ -474,7 +511,7 @@
           for (let line_num=0; line_num < lines.length; line_num++) {
             let value = lines[line_num].split(":")[column];
             if (!value) continue;
-            to_play.push(get_frequency(notes[value], type));
+            to_play.push(get_frequency(audio_context, notes[value], type));
           }
           to_play.forEach((item) => item.start());
           if (to_play.length === 0) {
@@ -510,12 +547,14 @@
           },
           "philosophy.txt": "I like open source software, dependencies, and building things from scratch. Were you expecting something deep? Sorry.\nI feel like too much programming is about money. Sure, I get it. Everyone needs it or they'll starve and die. I program for money too. But it sucks. Open source software seems like the cure. Software that is free, accessible, and gives rights to the user is cool, isn't it?\nAnyways, onto dependencies and making things from scratch. I don't like them. It's more interesting building things yourself, and generally results in less bloat and samey looking stuff (looking at you, bootstrap). Obviously I'm no extremist, I do use libraries, especially when things are complex or security/cryptography related. But I feel like it's just more fun to make things from scratch.",
           "minesweeper.txt": "Win a game of minesweeper before you open me.",
+          "browsers.txt": "I like Firefox, and loathe Safari. Chrome and Chromium-based browsers are icky because of Google but they keep up with web standards (or should I say, singlehandedly make them), and have minimal implementation bugs.",
         },
         "music": {
           "byoushin-wo-kamu.play": "bpm260:sawtooth\n::C#5:::::C#5::::C#5::::C#5::::C#5::::C#5:\nF#4:G#4::B4:F#4::G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:G#4\n:E3:B3:E3:::F#3:A3:F#3:C#3:G#3:B3:G#3::D#3:F#3:D#3::E3:B3:E3::F#3:A3:F#3\nA2:::::B2::::::::G2::::A2::::B2:::",
           "hana-ni-bourei.play": "bpm230:triangle\nG#5::G#5:G#5:G#5:G#5:G#5:A5:G#5:F#5:E5::E5:E5:E5:E5:E5:E5:E5:F#5::E5:E5:G#5:F#5\n:::::::::::B4:::::::::::::\n:E4::B4:::::E4::B4::::::F#4::::::::\nF#3::::::::::::E3::B3::::::D#3::B3::\n:::::::B2:::::::::::::::::",
           "super-mario.play": "bpm290:triangle:quick\nE5:E5:::E5:::C5:::E5::::G5:::::\nA4:A4:::A4:::A4:::A4::::B4:::::\nF#4:F#4:::F#4:::F#4:::F#4::::G4:::::G4\n:::::::::::::::::::G3\nD2:D2:::D2:::D2:::D2::::G2:::::G2",
           "eulogy-nnom.play": "bpm200:square\nC4:::D4:::D#4::::D4:::D#4:::F4:::::G4:D#4:C4:G#3::::G#3::A#3:G3::::::::C4::D4:D#4::C4::D4::D#4:F4::D4::D#4::F4::G4::D#4::A#4:G#4:G4:G#4:F4:G4:D#4:F4:D4:D4:D4:D4:D4:D4:D4:D4\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::A#3:G#3:G3:G#3:F3:G3:D#3:F3:D3:D3:D3:D3:D3:D3:D3:D3\n:::::::::::::::::::::::::::::::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2:::C2:C2",
+          "yoru-ni-kakeru.play": "300bpm:square\n::::::::::::::::::::::::::::::::::::::::::G5::F5::D5::D#5:::D5:::::C5\nG4::A#4:C5::G#4::G4::F4::D#4::F4::C5::A#4::C5:G4:::F4::D#4:::::D#4::F4:::D4:::G#4::G4::G4::F4::D4::D#4:::D4:::A#4::\n:::::::::::::::::::::::::C4:::C4::::C4::::::::B3::::::::::::::A#3::C4\n:::::::::::::::::::::::::G3:::::::G#3::::::::G3::::::::::::::::G#3\n::::::::::::::::::::::::::::::::D#3::::::::D3::::::::::::::::F3",
           "info.txt": "I obviously did not make any of these songs.",
         },
         "dev": {
@@ -560,7 +599,34 @@
       }
 
       //terminal
-      const SUDO_PASSWORD = "584551CE9EA95ECDC51C60DAC39A046F51BD851453276EA679D031256AF856B2";
+      const SUDO_PASSWORD = "F1D5EB7F3561DC137718BA7BD5D056BF635D0D6CEB08040A220B5241BDEC717C";
+      const SECRET_TEXT = [
+        {
+          id: "secret-intro",
+          encrypted: "8AC6C9520FFD1501A25C68CE8ED3925798407742901A5C27D7FA4EBD9C6E4D62144171D04085860C4D0E60091A6D532D054A4FD7ACF9230D33D9A9A8DB402A271DE4781F98E4DA576D7F9BEC98EF6F7DAF0772D1C74D6BB2CB1C2415B1FC501F93DCA38BDAE6D168255EE14AC6F391C749A0D782CD35FE3FF59CF23553EE05B2F8768887BB8169FC937498EB6909083DEBEA80A2BC556D7EC34FB22AE44F9BC96A4ED109B30B778EEF66CF167B6529245F4BA8D84A4765919012CB35E8DA5BFAF851C0AF06D2894D981F0B4C5672521E946F0D506AE43EDFF7112F012501E6A236903827E6D1A96734EE8C4975A1234173BF8190B50D32987AA74CD756F206",
+          nonce: "74A8B1BD990FFAB9B87E3FE1B0B9F624"
+        },
+        {
+          id: "secret-1",
+          encrypted: "F2DA240C7CA7E936C7F5F6C7DECDF60C4F5A0A0E87D5AF",
+          nonce: "2004F9014C4AA05A85FDA015F3870F4C"
+        },
+        {
+          id: "secret-2",
+          encrypted: "688B03EFB54A526E66CC0002BB306D2C0915C63F1F31B03F26C73ACC229FAEF54E861772FE6D386F497E11D98A2C805675D9C2B88FD15F2C374A3A2585C97A47",
+          nonce: "3CDBE5731BE5836D18204D7B5969C114"
+        },
+        {
+          id: "secret-3",
+          encrypted: "AEFBA96CB4EA88567F4B326A57B2BD3F1DC2A5C6788378",
+          nonce: "F6BDE68B3B2385B46CF7EA69E129DFBC"
+        },
+        {
+          id: "secret-project",
+          encrypted: "59F40807FBECB78318A96D2AC222F241DAA838130824F048033A95843972531631D8E18D778B953E7C0B12C3BC216AE540E84A900C10CEC5C03B94F1FA5F6F9F08B41D9B51382AD41C16E6F9BE7492B3ECC2F6C83E94826549557AFD1026F015477AD0C511E22BE701C3FF23316C4D82C2527013C3856108755763FB0A328F0FEC7254D326EC60B06C655203DA5185A497E4007FEBF56887E267EC47A065A283199DE40961A56E03E13F8744834073B5EE53597C504F7C9A04EB35806C28728AACB051CD008DC9651827ED3B3411B8446830291DF9A09E3A3C1FDA8ECB3594598A7C900D2E981F607EB9A37A03ACE91B1BC9BBA1EC88B3A8DE75A24433D0315A1D01A86F4C010CC1C0C40F064CBDD9736AF15098F6B5E2CCFD8F9A8F204A13905BB362CB153C5C67228A8EE6F16E24FB",
+          nonce: "734061C45257FD84ABFDC2A6D1642C5A"
+        }
+      ];
 
       function utf8_to_uint8(utf8) {
         let uint8 = new Uint8Array(utf8.length);
@@ -575,7 +641,7 @@
         let hex_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
         let uint8 = new Uint8Array(hex.length/2);
         for (let i=0; i < hex.length/2; i++) {
-          uint8[i] = hex_chars.indexOf(hex[i])*16+hex_chars.indexOf(hex[i+1]);
+          uint8[i] = hex_chars.indexOf(hex[i*2])*16+hex_chars.indexOf(hex[i*2+1]);
         }
         return uint8;
       }
@@ -591,7 +657,33 @@
         return hex;
       }
 
+      async function text_decrypt(encrypted, password, nonce) {
+        let encrypted_bytes = hex_to_uint8(encrypted);
+        nonce = hex_to_uint8(nonce);
+        //single hash of password is 32 bytes, will be aes key
+        let key_bytes = new Uint8Array(await window.crypto.subtle.digest("SHA-256", utf8_to_uint8(password)));
+        //key bytes to key object
+        let key = await crypto.subtle.importKey(
+          "raw",
+          key_bytes,
+          "AES-CTR",
+          true,
+          ["encrypt", "decrypt"]
+        );
+        let decrypted_bytes = new Uint8Array(await window.crypto.subtle.decrypt(
+          {
+            name: "AES-CTR",
+            counter: nonce,
+            length: 64
+          },
+          key,
+          encrypted_bytes
+        ));
+        return (new TextDecoder()).decode(decrypted_bytes);
+      }
+
       let wallpaper_index = 0;
+      let sudoed = false;
 
       document.getElementById("terminal-command-input").onkeydown = async (event) => {
         //enter key
@@ -603,7 +695,10 @@
           let command = args.shift();
           let response;
           if (command === "help") {
-            response = "Currently supported commands: help cd ls cat echo pwd clear wallpaper play loc cowsay start music programming minesweeper terminal";
+            response = "Currently supported commands: help cd ls cat echo pwd clear wallpaper play loc cowsay start music programming minesweeper calculator terminal";
+            if (sudoed) {
+              response += "\nand also mkdir, rm, mv, touch";
+            }
           } else if (command === "pwd") {
             response = current_path;
           } else if (command === "clear") {
@@ -667,19 +762,47 @@
           } else if (command === "start" || command === "music" || command === "programming" || command === "minesweeper") {
             open_window(false, command);
             response = `Opened ${command}`;
+          } else if (command === "calculator") {
+            let first_arg = args.shift();
+            if (first_arg) {
+              let total = Number(args[0]);
+              for (let i=1; i < args.length; i++) {
+                if (first_arg === "add") {
+                  total += Number(args[i]);
+                } else if (first_arg === "sub") {
+                  total -= Number(args[i]);
+                } else if (first_arg === "mul") {
+                  total *= Number(args[i]);
+                } else if (first_arg === "div") {
+                  total /= Number(args[i]);
+                }
+              }
+              response = String(total);
+            } else {
+              open_window(false, command);
+              response = `Opened calculator`;
+            }
           } else if (command === "terminal") {
             response = "Hmm...";
           } else if (command === "sudo") {
-            if (!args[0]) {
+            let password = args[0];
+            if (!password) {
               response = "Include password as the first argument"
             } else {
-              let hashed = uint8_to_hex(new Uint8Array(await window.crypto.subtle.digest("SHA-256", utf8_to_uint8(args[0]))));
+              //double hash, since single hash is used as encryption key
+              let hashed = uint8_to_hex(new Uint8Array(await window.crypto.subtle.digest("SHA-256", new Uint8Array(await window.crypto.subtle.digest("SHA-256", utf8_to_uint8(password))))));
               if (hashed === SUDO_PASSWORD) {
-                response = "Success! This does nothing right now.";
+                sudoed = true;
+                response = "Success!";
+                open_window(false, "Himitsu");
+                for (let i=0; i < SECRET_TEXT.length; i++) {
+                  let secret = SECRET_TEXT[i];
+                  document.getElementById(secret.id).textContent = await text_decrypt(secret.encrypted, password, secret.nonce);
+                }
               } else if (args[0] === "password") {
                 response = "Success! Just kidding. Wrong password.";
               } else {
-                response = `Wrong password: ${["remember, all lowercase", "remember, separated by hyphens", "remember, there are four parts, five dashes, six words"][Math.floor(Math.random()*3)]}`;
+                response = `Wrong password: ${["remember, all lowercase", "remember, separated by hyphens", "remember, there are four parts, five dashes, six words", "remember, three out of four are king related"][Math.floor(Math.random()*4)]}`;
               }
             }
           } else if (command === "wallpaper") {
@@ -756,11 +879,12 @@
                 } else {
                   file_content = get_file_contents(current_path+"/"+args[0]);
                 }
-                if (file_content === false) {
+                if (!file_content) {
                   response = "Could not find file. `..` are not supported with the play command";
+                } else {
+                  play_sound_file(file_content);
+                  response = "Playing";
                 }
-                play_sound_file(file_content);
-                response = "Playing";
               }
             }
           } else if (command === "loc") {
@@ -787,6 +911,8 @@
             response += "\n ----------------------------------------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||";
           } else if (command === "npm" && args[0] === "install") {
             response = "[████████] Installing 700000 GB of packages..."
+          } else if (command.replace("-", "").toLowerCase() === "commandprompt") {
+            response = "Look, I know the terminal is called command prompt or power shell in windows but I don't care. It's a fucking terminal.";
           } else {
             response = "Lo siento, unrecognized command. Type 'help' for a list of commands"
           }
@@ -805,16 +931,6 @@
           window_content.scrollTo(0, window_content.scrollHeight);
         }
       };
-
-      //taskbar start
-      document.getElementById("taskbar-start").onclick = () => {
-        if (document.getElementById("start-window").style.display === "none") {
-          document.getElementById("start-window").style.display = "block";
-          create_taskbar_tab("Start");
-        }
-      };
-
-      create_taskbar_tab("Start");
 
       //blackbeard
       class Canvas {
@@ -920,7 +1036,6 @@
 
       class MineGrid {
         constructor(canvas) {
-          //rare bug: if user clicks twice in very fast succession, the grid will generate twice and change
           //generate mines
           this.minefield = MineGrid.generate_minefield();
           this.first_click = true;
@@ -1027,14 +1142,16 @@
           let tile_x = Math.floor(adjusted_x/tile_dimension);
           let tile_y = Math.floor(adjusted_y/tile_dimension);
           let tile = this.minefield[tile_y][tile_x];
-          if (this.first_click && (tile.mine || tile.mines_touching !== 0)) {
+          if (this.first_click) {
             this.first_click = false;
-            //regenerate minefield, until it starts on a square without any mines touching
-            while (true) {
-              this.minefield = MineGrid.generate_minefield();
-              tile = this.minefield[tile_y][tile_x];
-              if (!tile.mine && tile.mines_touching === 0) {
-                break;
+            if (tile.mine || tile.mines_touching !== 0) {
+              //regenerate minefield, until it starts on a square without any mines touching
+              while (true) {
+                this.minefield = MineGrid.generate_minefield();
+                tile = this.minefield[tile_y][tile_x];
+                if (!tile.mine && tile.mines_touching === 0) {
+                  break;
+                }
               }
             }
           }
@@ -1112,7 +1229,7 @@
               this.game_state = "won";
               //announce win
               document.getElementById("minesweeper-status").textContent = "- You won!";
-              file_system["documents"]["minesweeper.txt"] = "In case you couldn't read the hint at the bottom left of the minesweeper window, it says 'hint3 chinese monkey king'. Oh uh and don't forget that you can play another round by closing and reopening the window.";
+              file_system["documents"]["minesweeper.txt"] = "In case you couldn't read the hint at the bottom left of the minesweeper window, it says 'hint1 chinese monkey king'. Oh uh and don't forget that you can play another round by closing and reopening the window.";
             }
           }
           //finally, update canvas
@@ -1157,7 +1274,7 @@
           if (this.game_state === "won") {
             this.canvas.context.font = "8px Arial";
             this.canvas.context.fillStyle = "gray";
-            this.canvas.context.fillText("hint3 chinese monkey king", 5, 270);
+            this.canvas.context.fillText("hint1 chinese monkey king", 5, 270);
           }
           //10x10 mines, canvas is 270x270
           const CORNER_HEIGHT_TILE = 3;
@@ -1278,6 +1395,72 @@
         new MineGrid(canvas);
         canvas.update();
       }
+
+      //calculator
+      //the total number after operation
+      let current_total;
+      //the number or string or whatever displayed on screen
+      let current_operation;
+      let current_value;
+      function calc_click_handler() {
+        let value = this.textContent;
+        //0, 1, 2, 3, etc
+        if (!isNaN(Number(value))) {
+          //dont allow the length to overflow the screen
+          if (current_value?.length > 25) return;
+          if (Number(current_value)) {
+            //not an operation, so add the number as a string to current value
+            current_value += value;
+          } else {
+            //after some sort of operation, or undefined, so set it to the number
+            //this also handles 0s too haha
+            current_value = value;
+          }
+        } else if (value === "CE") {
+          //only clear current value and operation
+          current_value = undefined;
+          current_operation = undefined;
+        } else if (value === "C") {
+          current_value = undefined;
+          current_operation = undefined;
+          current_total = undefined;
+        } else if (!isNaN(current_value)) {
+          console.log("e")
+          //^ current value has to be a number and not an operation or something else
+          if (value === "+" || value === "-" || value === "*" || value === "/") {
+            current_total = Number(current_value);
+            current_operation = value;
+            current_value = value;
+          } else if (value === "=") {
+            //do the current operation
+            if (current_operation === "+") {
+              current_total += Number(current_value);
+            } else if (current_operation === "-") {
+              current_total -= Number(current_value);
+            } else if (current_operation === "*") {
+              current_total *= Number(current_value);
+            } else if (current_operation === "/") {
+              current_total /= Number(current_value);
+            }
+            current_value = current_total;
+            current_operation = undefined;
+          }
+        }
+        //
+        document.getElementById("calc-input-actual").value = current_value === undefined ? "0" : current_value;
+      }
+
+      document.querySelectorAll(".calc-btn").forEach((item) => item.onclick = calc_click_handler);
+
+      //taskbar start
+      document.getElementById("taskbar-start").onclick = () => {
+        if (document.getElementById("start-window").style.display === "none") {
+          document.getElementById("start-window").style.display = "block";
+          create_taskbar_tab("Start");
+        }
+      };
+
+      create_taskbar_tab("Start");
     </script>
   </body>
 </html>
