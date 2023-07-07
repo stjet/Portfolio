@@ -317,12 +317,13 @@
       }
 
       document.querySelectorAll(".button-x").forEach((x) => {
-        x.parentElement.onclick = () => {
+        x.parentElement.onclick = (event) => {
           //hide window
           let window_obj = x.parentElement.parentElement.parentElement.parentElement;
           window_obj.style.display = "none";
           document.getElementById("toolbar-tab-"+window_obj.id.replace("-window", "")).remove();
           recount_taskbar_tabs();
+          event?.stopPropagation();
         };
       });
 
@@ -476,7 +477,11 @@
             current_operation = undefined;
             current_value = undefined;
             document.getElementById("calc-input-actual").value = "not all buttons work";
-            setTimeout(() => document.getElementById("calc-input-actual").value = "0", 1000);
+            setTimeout(() => {
+              if (document.getElementById("calc-input-actual").value === "not all buttons work") {
+                document.getElementById("calc-input-actual").value = "0";
+              }
+            }, 1000);
           }
         }
         change_current_window(window_name.toLowerCase());
@@ -564,7 +569,53 @@
         }
       };
 
-      function path_to_obj(path) {
+      function make_dir(dir_name) {
+        if (current_path === "/") {
+          file_system[dir_name] = {};
+        } else {
+          let dirs = current_path.split("/");
+          //since path starts with "/", remove the empty string at start
+          dirs.shift();
+          let obj = file_system;
+          for (let i=0; i < dirs.length; i++) {
+            obj = obj[dirs[i]];
+          }
+          obj[dir_name] = {};
+        }
+      }
+
+      //make or edit file
+      function make_file(file_name, file_contents) {
+        if (current_path === "/") {
+          file_system[file_name] = file_contents;
+        } else {
+          let dirs = current_path.split("/");
+          //since path starts with "/", remove the empty string at start
+          dirs.shift();
+          let obj = file_system;
+          for (let i=0; i < dirs.length; i++) {
+            obj = obj[dirs[i]];
+          }
+          obj[file_name] = file_contents;
+        }
+      }
+
+      //delete file or directory
+      function delete_obj(path) {
+        let dirs = path.split("/");
+        //since path starts with "/", remove the empty string at start
+        dirs.shift();
+        let obj = file_system;
+        for (let i=0; i < dirs.length; i++) {
+          if (i === dirs.length-1) {
+            delete obj[dirs[i]];
+          } else {
+            obj = obj[dirs[i]];
+          }
+        }
+      }
+
+      function path_to_result(path) {
         if (path === "/") {
           return file_system;
         } else {
@@ -574,12 +625,18 @@
           let obj = file_system;
           for (let i=0; i < dirs.length; i++) {
             obj = obj[dirs[i]];
-            if (!obj || typeof obj === "string") {
+            if (!obj) {
               return false;
             }
           }
           return obj;
         }
+      }
+
+      function path_to_obj(path) {
+        let obj = path_to_result(path);
+        if (typeof obj === "string") return false;
+        return obj;
       }
 
       function get_file_contents(path) {
@@ -697,7 +754,7 @@
           if (command === "help") {
             response = "Currently supported commands: help cd ls cat echo pwd clear wallpaper play loc cowsay start music programming minesweeper calculator terminal";
             if (sudoed) {
-              response += "\nand also mkdir, rm, mv, touch";
+              response += "\nand also mkdir, rm, touch";
             }
           } else if (command === "pwd") {
             response = current_path;
@@ -829,6 +886,10 @@
               },
               {
                 type: "backgroundColor",
+                value: "var(--desktop-background6)",
+              },
+              {
+                type: "backgroundColor",
                 value: "white",
               },
               {
@@ -913,6 +974,69 @@
             response = "[████████] Installing 700000 GB of packages..."
           } else if (command.replace("-", "").toLowerCase() === "commandprompt") {
             response = "Look, I know the terminal is called command prompt or power shell in windows but I don't care. It's a fucking terminal.";
+          } else if (sudoed && ["mkdir", "rm", "touch"].includes(command)) {
+            if (command === "mkdir") {
+              if (!args[0]) {
+                response = "First arg should be new directory name to create in current directory";
+              } else {
+                if (args[0].includes("/") || args[0].includes(".")) {
+                  response = "New directory must be in current directory, and not be a file";
+                } else {
+                  //check if directory already exists
+                  let current_dir = path_to_obj(current_path);
+                  if (current_dir[args[0]]) {
+                    response = "Directory with that name already exists here";
+                  } else {
+                    make_dir(args[0]);
+                    response = "Created directory";
+                  }
+                }
+              }
+            } else if (command === "touch") {
+              let file_name = args.shift();
+              if (!file_name) {
+                response = "First arg is file to create/edit in current directory, rest of args are new file contents";
+              } else {
+                if (!file_name.includes(".")) {
+                  response = "File must have file extension";
+                } else if (file_name.includes("/")) {
+                  response = "New file must be created in current directory";
+                } else {
+                  let try_path;
+                  if (current_path === "/") {
+                    try_path = current_path+file_name;
+                  } else {
+                    try_path = current_path+"/"+file_name;
+                  }
+                  //check if file already exists
+                  if (path_to_result(try_path)) {
+                    response = "File or directory with that name already exists here";
+                  } else {
+                    make_file(file_name, args.join(" "));
+                    response = "Created file";
+                  }
+                }
+              }
+            } else if (command === "rm") {
+              let remove_name = args.shift();
+              if (!remove_name) {
+                response = "First arg should be directory or file in current directory to remove";
+              } else {
+                let try_path;
+                if (current_path === "/") {
+                  try_path = current_path+remove_name;
+                } else {
+                  try_path = current_path+"/"+remove_name;
+                }
+                //check if file/directory exists
+                if (path_to_result(try_path)) {
+                  delete_obj(try_path);
+                  response = "Removed file/directory";
+                } else {
+                  response = "That file/directory doesn't exist, so nothing to remove";
+                }
+              }
+            }
           } else {
             response = "Lo siento, unrecognized command. Type 'help' for a list of commands"
           }
@@ -1408,13 +1532,25 @@
         if (!isNaN(Number(value))) {
           //dont allow the length to overflow the screen
           if (current_value?.length > 25) return;
-          if (Number(current_value)) {
-            //not an operation, so add the number as a string to current value
-            current_value += value;
+          if (!isNaN(Number(current_value))) {
+            if (Number(current_value) === 0 && current_value !== "0.") {
+              current_value = value;
+            } else {
+              //not an operation, so add the number as a string to current value
+              current_value += value;
+            }
           } else {
             //after some sort of operation, or undefined, so set it to the number
-            //this also handles 0s too haha
             current_value = value;
+          }
+        } else if (value === ".") {
+          if (current_value?.length > 25) return;
+          if (!isNaN(Number(current_value))) {
+            current_value += ".";
+          }
+        } else if (value === "+/-") {
+          if (!isNaN(Number(current_value))) {
+            current_value = String(-Number(current_value));
           }
         } else if (value === "CE") {
           //only clear current value and operation
@@ -1425,7 +1561,6 @@
           current_operation = undefined;
           current_total = undefined;
         } else if (!isNaN(current_value)) {
-          console.log("e")
           //^ current value has to be a number and not an operation or something else
           if (value === "+" || value === "-" || value === "*" || value === "/") {
             current_total = Number(current_value);
@@ -1444,6 +1579,8 @@
             }
             current_value = current_total;
             current_operation = undefined;
+          } else if (value === "sqrt") { //`&& Number(current_value) === current_total` will make sure square root only done on totals, but maybe not needed?
+            current_value = String(Math.sqrt(Number(current_value)));
           }
         }
         //

@@ -1,3 +1,5 @@
+//never linked anywhere, just wanted to put tools used during development/debugging here so it doesn't bloat index.html too much
+
 async function text_encrypt(text, password, nonce) {
   let data_bytes = (new TextEncoder()).encode(text);
   //single hash of password is 32 bytes, will be aes key
