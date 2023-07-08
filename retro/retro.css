@@ -384,6 +384,7 @@ html, body {
   background-color: transparent;
   color: white;
   font-family: monospace;
+  font-size: 1em;
   width: 100%;
 }
 
