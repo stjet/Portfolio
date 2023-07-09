@@ -263,13 +263,15 @@
       </div>
     </div>
     <div id="portrait-warning">
-      <p>Hey bro! This site doesn't really work in portrait mode.</p>
+      <p>Hey bro! This site doesn't really work in portrait mode. Flip the phone to landscape mode.</p>
     </div>
     <script>
-      //todo: sudo reward - write fs access?
-      //todo: get calculator to at least semi work
-      //todo: implement desktop shortcuts?
+      //in order of things I want to do
+      //for scripting, variables should work in commands too
+      //todo: chat client? lol
+      //todo: implement desktop shortcuts that run pscript?
       //todo: flagging in minesweeper? probably not needed
+      //todo: import and export file for wallpaper, file system state
 
       let current_window = "start";
       let window_z_index = 1;
@@ -495,11 +497,11 @@
         return new Promise(resolve => setTimeout(resolve, ms));
       }
 
-      function get_frequency(audio_context, frequency, type) {
+      function get_frequency(audio_context, destination, frequency, type) {
         let oscillator = audio_context.createOscillator();
         oscillator.type = type;
         oscillator.frequency.value = frequency;
-        oscillator.connect(audio_context.destination);
+        oscillator.connect(destination); //audio_context.destination
         return oscillator;
       }
 
@@ -511,12 +513,15 @@
         let type = lines[0].split(":")[1];
         let quick_rest = lines[0].split(":")[2] === "quick";
         lines.shift();
+        let gain = audio_context.createGain();
+        gain.gain.value = 0.2;
+        gain.connect(audio_context.destination);
         for (let column=0; column < lines[0].split(":").length; column++) {
           let to_play = [];
           for (let line_num=0; line_num < lines.length; line_num++) {
             let value = lines[line_num].split(":")[column];
             if (!value) continue;
-            to_play.push(get_frequency(audio_context, notes[value], type));
+            to_play.push(get_frequency(audio_context, gain, notes[value], type));
           }
           to_play.forEach((item) => item.start());
           if (to_play.length === 0) {
@@ -538,7 +543,6 @@
       }
 
       //file system
-
       let current_path = "/";
 
       let file_system = {
@@ -547,13 +551,16 @@
         },
         "documents": {
           "culture": {
-            "shogun2.txt": "Great game. Awesome music, fun battles. I'm not too good at it though.",
+            "shogun2.txt": "Great game. Awesome music, fun battles. I think I'm decent-ish (?), but only because of watching hours of Volound",
             "manga.txt": "Nichijou, CITY, Senpai wa Otokonoko, Shimeji Simulation",
+            "magazines.txt": "Smithsonian, Bloomberg",
           },
           "resume.txt": "Nothing was paused, so there is nothing to resume.",
           "me.txt": "I like open source software, dependencies, and building things from scratch. Were you expecting something deep? Sorry.\nI feel like too much programming is about money. Sure, I get it. Everyone needs it or they'll starve and die. I program for money too. But it sucks (the starving and dying without a job part, not the money part, I love money). Open source software seems like the cure. Software that is free, accessible, and gives rights to the user is cool, isn't it?\nAnyways, onto dependencies and making things from scratch. I don't like them. It's more interesting building things yourself, and generally results in less bloat and samey looking stuff (looking at you, bootstrap). Obviously I'm no extremist, I do use libraries, especially when things are complex or security/cryptography related. But I feel like it's just more fun to make things from scratch.\nI hope you enjoyed my lightly edited ramblings.",
           "minesweeper.txt": "Win a game of minesweeper before you open me.",
           "browsers.txt": "I like Firefox, and loathe Safari. Chrome and Chromium-based browsers are icky because of Google but they keep up with web standards (or should I say, singlehandedly make them), and have minimal implementation bugs.",
+          "design.txt": "I've been told I'm not a designer (ouch), and being slightly colourblind probably doesn't help (picking a colour scheme is already so hard...). But I do know how to use inkscape and would say I can design a little, I hope? My websites tend to be more on the more minimalistic, barebones side but sometimes I make colourful and hopefully good-ish looking websites like prussia.dev/sample and ztmy.prussia.dev.",
+          "ellipsis.txt": "i like them... and i overuse them...",
         },
         "music": {
           "byoushin-wo-kamu.play": "bpm260:sawtooth\n::C#5:::::C#5::::C#5::::C#5::::C#5::::C#5:\nF#4:G#4::B4:F#4::G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:F#4:G#4::B4:F#4:G#4::G#4:G#4\n:E3:B3:E3:::F#3:A3:F#3:C#3:G#3:B3:G#3::D#3:F#3:D#3::E3:B3:E3::F#3:A3:F#3\nA2:::::B2::::::::G2::::A2::::B2:::",
@@ -563,6 +570,7 @@
           "yoru-ni-kakeru.play": "bpm300:square\n::::::::::::::::::::::::::::::::::::::::::G5::F5::D5::D#5:::D5:::::C5\nG4::A#4:C5::G#4::G4::F4::D#4::F4::C5::A#4::C5:G4:::F4::D#4:::::D#4::F4:::D4:::G#4::G4::G4::F4::D4::D#4:::D4:::A#4::\n:::::::::::::::::::::::::C4:::C4::::C4::::::::B3::::::::::::::A#3::C4\n:::::::::::::::::::::::::G3:::::::G#3::::::::G3::::::::::::::::G#3\n::::::::::::::::::::::::::::::::D#3::::::::D3::::::::::::::::F3",
           "super-idol.play": "bpm250:square\nD5:D5:D#5:D5:C5:D5:G4::C5:A#4:G4:A#4::C5::C5:C5:D5:C5:A#4:C5:D5::A#4:G4:G4:A#4:G4:A#4:G4::C5:D5:D#5:D5:C5:A#4:D5:C5::D5:G4::G4:A#4:A4::A4:A4:D5::D5::A#4",
           "info.txt": "I obviously did not make any of these songs.",
+          "vocaloid.txt": "Hachi, n-buna, INABAKUMORI, CHINOZO, Paseri Onuma, Nayutan Seijin, Chiitana",
         },
         "dev": {
           "main.rs": "fn main() {\n  println!(\"Hola Mundo\");\n}",
@@ -572,6 +580,7 @@
           "example.pscript": "VAR $A echo abcdefg;\nVAR $B calculator add 1 1;\n//basically, go to line 6 if var equals 'asdf';\nGOTOIF 8 $A echo asdf;\necho variable A is not 'asdf';\nGOTO 9;\n//^line 8;\necho this line will never run;\necho program ending;",
           "hola_mundo.pscript": "echo HOLA MUNDO",
           "jeff.pscript": "GOTOIF 4 $ARGS0 echo jeff;\necho set the first arg as 'jeff' and run again;\nGOTO 5;\necho Hi Jeff!;//line 5",
+          "squared.pscript": "VAR $A calculator mul $ARGS0 $ARGS0; echo $A",
         },
       };
 
@@ -1100,6 +1109,15 @@
         }
       }
 
+      //could be a problem if a vars value is another var...
+      function replace_vars(command, vars) {
+        let keys = Object.keys(vars);
+        for (let i=0; i < keys.length; i++) {
+          command = command.replaceAll(keys[i], vars[keys[i]]);
+        }
+        return command;
+      }
+
       async function run_line(lines, current_index, output, iterations, vars, debug=false) {
         iterations++;
         let value = lines[current_index].trim();
@@ -1115,7 +1133,7 @@
           if (!var_name?.startsWith("$")) {
             return gen_error("First arg must be variable name, which must start with $", output, debug);
           }
-          let var_value = await evaluate_command(splitted.join(" "), current_path);
+          let var_value = await evaluate_command(replace_vars(splitted.join(" "), vars), current_path);
           vars[var_name] = var_value;
         } else if (first === "GOTO") {
           let goto_line = Number(splitted[0]);
@@ -1141,7 +1159,7 @@
             return gen_error(`Variable "${var_name}" undefined`, output, debug)
           }
           //syntax example: GOTOIF 8 $A echo asdf
-          let result = await evaluate_command(splitted.join(" "), current_path);
+          let result = await evaluate_command(replace_vars(splitted.join(" "), vars), current_path);
           if (result === vars[var_name]) {
             //goto line
             current_index++;
@@ -1150,9 +1168,9 @@
         } else if (!first.startsWith("//") && first !== "") {
           //assume it is a command, ignore if starts with // because thats a comment
           if (output !== "") {
-            output += "\n"+await evaluate_command(value, current_path);
+            output += "\n"+await evaluate_command(replace_vars(value, vars), current_path);
           } else {
-            output += await evaluate_command(value, current_path);
+            output += await evaluate_command(replace_vars(value, vars), current_path);
           }
         }
         //if last line, end
@@ -1322,7 +1340,6 @@
                 row.push({
                   mine: true,
                   revealed: false,
-                  flagged: false,
                 });
               } else {
                 row.push({
@@ -1330,7 +1347,6 @@
                   //placeholder
                   mines_touching: 0,
                   revealed: false,
-                  flagged: false,
                 });
               }
             }
@@ -1612,8 +1628,6 @@
                     this.canvas.context.fillText(String(tile.mines_touching), top_x+Math.round((tile_dimension-text_width)/2), bottom_y-(tile_dimension-font_size));
                   }
                 }
-              } else if (tile.flagged) {
-                //
               } else {
                 //draw corners
                 let tile_top = new Path2D();
@@ -1667,6 +1681,7 @@
       //the number or string or whatever displayed on screen
       let current_operation;
       let current_value;
+      let calc_memory = 0;
       function calc_click_handler() {
         let value = this.textContent;
         //0, 1, 2, 3, etc
@@ -1701,6 +1716,14 @@
           current_value = undefined;
           current_operation = undefined;
           current_total = undefined;
+        } else if (value === "MC") {
+          calc_memory = 0;
+        } else if (value === "MR") {
+          current_value = String(calc_memory);
+        } else if (value === "MS") {
+          calc_memory = current_total;
+        } else if (value === "M+") {
+          calc_memory += current_total;
         } else if (!isNaN(current_value)) {
           //^ current value has to be a number and not an operation or something else
           if (value === "+" || value === "-" || value === "*" || value === "/") {
@@ -1717,6 +1740,8 @@
               current_total *= Number(current_value);
             } else if (current_operation === "/") {
               current_total /= Number(current_value);
+            } else if (!current_operation) {
+              current_total = Number(current_value)
             }
             current_value = current_total;
             current_operation = undefined;
@@ -1740,7 +1765,8 @@
             open_window(undefined, windows_to_open[i]);
           }
         }
-      } else if (params.get("background")) {
+      }
+      if (params.get("background")) {
         evaluate_command(`wallpaper url ${params.get("background")}`);
       }
 

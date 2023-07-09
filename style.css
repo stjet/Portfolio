@@ -103,3 +103,14 @@ h1 {
 #left {
   margin-right: 15px;
 }
+
+.alert {
+  background-color: red;
+  width: 100%;
+}
+
+.alert-x {
+  cursor: pointer;
+  font-size: 1.2em;
+  margin-right: 10px;
+}

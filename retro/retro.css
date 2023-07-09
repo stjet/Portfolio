@@ -403,6 +403,18 @@ html, body {
   grid-template-columns: 3ch auto;
 }
 
+.spoiler {
+  background-color: black;
+  border-radius: 5px;
+  transition: background-color 0.7s;
+  padding: 2px;
+}
+
+.spoiler:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.7s;
+}
+
 .window:not(#start-window) {
   display: none;
 }
