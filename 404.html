@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width">
     <title>404: Page Not Found</title>
     <style>
+      @font-face {
+        font-family: MartianMono;
+        src: url(/fonts/MartianMono.woff);
+      }
+
       * {
-        font-family: monospace;
+        font-family: MartianMono, monospace;
       }
 
       #error-container {
@@ -31,23 +36,25 @@
       }
       
       body {
-        color: black;
-        background-color: white;
+        color: white;
+        background-color: #003153;
       }
 
+      /*
       @media (prefers-color-scheme: dark) {
         body {
-          color: white;
-          background-color: black;
+          color: black;
+          background-color: white;
         }
       }
+      */
     </style>
   </head>
   <body>
     <div id="error-container">
       <h1>404</h1>
-      <p>Page Not Found</p>
-      <p><a href="/">Main</a> - <a href="/retro">Retro</a> - <a href="/sample">Sample</a></p>
+      <p>page not found</p>
+      <p><a href="/">main</a> - <a href="/retro">retro</a> - <a href="/sample">sample</a></p>
     </div>
   </body>
 </html>

@@ -1,0 +1,183 @@
+@font-face {
+  font-family: MartianMono;
+  src: url(/fonts/MartianMono.woff);
+}
+
+* {
+  font-family: MartianMono, monospace;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: currentColor;
+}
+
+p {
+  line-height: 1.4;
+}
+
+.slide {
+  box-sizing: border-box;
+  padding: 25px;
+}
+
+.full {
+  min-height: 100vh;
+}
+
+.slide-title {
+  font-size: 2.5em;
+}
+
+#intro-container {
+  background-color: #003153;
+  color: white;
+}
+
+#intro {
+  padding-top: 35vh;
+  text-align: center;
+}
+
+#intro h1 {
+  font-size: 5em;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#intro p::after {
+  content: "?";
+  animation-name: fade;
+  animation-delay: 1s;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+#projects-container {
+  background-color: #00548F;
+  color: white;
+}
+
+/* we need this element so the nearest positioned ancestor of .seymour is not body */
+#projects-wrapper {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+#projects {
+  padding: 25px 0px;
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 15px;
+  column-gap: 15px;
+}
+
+/* only first ten will fit on desktop */
+.project:nth-child(n + 11) {
+  display: none;
+}
+
+.project-title {
+  font-size: 1.45em;
+}
+
+.project-title a {
+  text-decoration: none;
+}
+
+.project-description {
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.seymour {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  height: 1em;
+  bottom: 0;
+  right: calc(50vw - 4ch);
+  /* needed so em and ch sync */
+  font-size: 1em;
+}
+
+input.seymour {
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  z-index: 2;
+}
+
+input.seymour:checked + span.seymour::after {
+  content: "see less";
+}
+
+input.seymour:checked ~ #projects .project {
+  display: block;
+}
+
+input.seymour {
+  width: 8ch;
+}
+
+span.seymour::after {
+  content: "see more";
+}
+
+#uno-complex {
+  color: #00548F;
+}
+
+#misc-container {
+  background-color: #0072C2;
+  color: white;
+  height: 80vh;
+}
+
+footer {
+  background-color: #028cef;
+  color: white;
+  height: 20vh;
+}
+
+.contact-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 975px) {
+  #intro h1 {
+    font-size: 4em;
+  }
+
+  #projects {
+    grid-template-columns: auto;
+  }
+  
+  /* only first three will fit on mobile */
+  .project:nth-child(n + 4) {
+    display: none;
+  }
+
+  .mobile-hide {
+    display: none;
+  }
+}
