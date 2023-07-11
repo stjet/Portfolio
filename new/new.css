@@ -106,6 +106,7 @@ p {
   padding: 0;
   margin: 0;
   margin-top: 5px;
+  font-size: 0.85em;
 }
 
 .seymour {
@@ -163,21 +164,54 @@ footer {
   text-decoration: none;
 }
 
-@media screen and (max-width: 975px) {
+@media screen and (max-width: 500px) {
   #intro h1 {
     font-size: 4em;
+  }
+
+  #projects-container {
+    min-height: initial;
+    height: auto;
   }
 
   #projects {
     grid-template-columns: auto;
   }
   
-  /* only first three will fit on mobile */
-  .project:nth-child(n + 4) {
+  /* only first 4 will fit on mobile */
+  .project:nth-child(n + 5) {
     display: none;
   }
 
-  .mobile-hide {
+  .mobile-hide-1 {
     display: none;
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .mobile-hide-1, .mobile-hide-2 {
+    display: none;
+  }
+
+  footer {
+    height: auto;
+  }
+}
+
+@media screen and (max-height: 400px) {
+  #misc-container {
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #intro h1 {
+    font-size: 3.75em;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  #intro h1 {
+    font-size: 3.5em;
   }
 }
