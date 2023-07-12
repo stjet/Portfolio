@@ -38,6 +38,10 @@ p {
   font-size: 2.5em;
 }
 
+.separator::after {
+  content: "•";
+}
+
 #intro-container {
   background-color: #003153;
   color: white;
@@ -85,8 +89,8 @@ p {
   padding: 25px 0px;
   display: grid;
   grid-template-columns: auto auto;
-  row-gap: 15px;
-  column-gap: 15px;
+  row-gap: 1.5em;
+  column-gap: 1.5em;
 }
 
 /* only first ten will fit on desktop */
@@ -100,6 +104,10 @@ p {
 
 .project-title a {
   text-decoration: none;
+}
+
+.project-info {
+  line-height: 1.4;
 }
 
 .project-description {
