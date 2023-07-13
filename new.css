@@ -89,8 +89,8 @@ p {
   padding: 25px 0px;
   display: grid;
   grid-template-columns: auto auto;
-  row-gap: 1.5em;
-  column-gap: 1.5em;
+  row-gap: 1.6em;
+  column-gap: 1.6em;
 }
 
 /* only first ten will fit on desktop */
