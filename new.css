@@ -12,6 +12,10 @@ html, body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 h1, h2, h3 {
   margin: 0;
   padding: 0;
@@ -19,6 +23,10 @@ h1, h2, h3 {
 
 a {
   color: currentColor;
+}
+
+a:hover {
+  color: gainsboro;
 }
 
 p {
@@ -73,6 +81,15 @@ p {
   animation-fill-mode: forwards;
 }
 
+#scroll-down {
+  display: inline-block;
+  font-size: 1.2em;
+  transform: scaleX(2);
+  position: absolute;
+  bottom: 25px;
+  text-decoration: none;
+}
+
 #projects-container {
   background-color: #00548F;
   color: white;
@@ -87,6 +104,7 @@ p {
 
 #projects {
   padding: 25px 0px;
+  padding: 15px 0px 25px 0px;
   display: grid;
   grid-template-columns: auto auto;
   row-gap: 1.6em;
@@ -135,6 +153,10 @@ input.seymour {
   z-index: 2;
 }
 
+input.seymour:hover + span.seymour {
+  color: gainsboro;
+}
+
 input.seymour:checked + span.seymour::after {
   content: "see less";
 }
@@ -151,14 +173,14 @@ span.seymour::after {
   content: "see more";
 }
 
-#uno-complex {
-  color: #00548F;
-}
-
 #misc-container {
   background-color: #0072C2;
   color: white;
   height: 80vh;
+}
+
+#misc-container p:first-of-type {
+  margin-top: 0px;
 }
 
 footer {
@@ -170,6 +192,10 @@ footer {
 .contact-link {
   cursor: pointer;
   text-decoration: none;
+}
+
+.contact-link + .separator {
+  padding: 0px 5px;
 }
 
 @media screen and (max-width: 500px) {
