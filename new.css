@@ -1,6 +1,6 @@
 @font-face {
   font-family: MartianMono;
-  src: url(/fonts/MartianMono.woff);
+  src: url(/fonts/MartianMono-limited.woff2), url(/fonts/MartianMono.woff);
 }
 
 * {
@@ -87,6 +87,7 @@ p {
   transform: scaleX(2);
   position: absolute;
   bottom: 25px;
+  left: 50%;
   text-decoration: none;
 }
 
@@ -235,6 +236,10 @@ footer {
 @media screen and (max-height: 400px) {
   #misc-container {
     height: auto;
+  }
+
+  #scroll-down { 
+    display: none;
   }
 }
 
