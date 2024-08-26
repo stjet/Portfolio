@@ -126,6 +126,18 @@ p {
   text-decoration: none;
 }
 
+.favourite a::after {
+  /*content: "✸";
+  margin-left: 4px;*/
+  /*content: "🞶";*/
+  /*content: "⁂";*/
+  content: "*"; /* boring, but whatever */
+}
+
+.favourite a:hover::after {
+  color: #00ccff;
+}
+
 .project-info {
   line-height: 1.4;
 }
